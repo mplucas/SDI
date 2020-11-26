@@ -1,0 +1,13 @@
+client
+hw_client.o
+hw_clnt.c
+hw_clnt.o
+hw_server.o
+hw_svc.c
+hw_svc.o
+hw_xdr.o
+hw.h
+lucas*
+main_file
+server
+tools.o
