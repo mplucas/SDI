@@ -9,6 +9,10 @@ sdi-2> ./client sdi-1 mensagem
 ou
 ./client localhost teste lucas file1M.client
 
+%%%%% CRIAR ARQUIVOS E DISTRIBUIR NOS DIRETORIOS %%%%%
+na pasta src:
+make clean; make; cp server ../server; cp client ../client01; cp client ../client02; cp client ../client03; 
+
 
 %%%%% MAIS DICAS E EXEMPLOS %%%%%
 https://docs.oracle.com/cd/E19683-01/816-1435/rpcgenpguide-21470/index.html
