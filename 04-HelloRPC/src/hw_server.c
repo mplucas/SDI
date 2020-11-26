@@ -44,6 +44,45 @@ int *func3_1_svc(struct param *a, struct svc_req *req) {
      return (&ret);
 }
 
+char MESSAGE_COUNT_FILE_NAME[13] = "messageCount";
+
+int getMessageCount(){
+     
+     FILE* fileRead = fopen(MESSAGE_COUNT_FILE_NAME, "r");
+     
+     if (fileRead == NULL) {
+		return 0;
+	}
+
+     char *strCount = readline(fileRead);
+
+     if(strlen(strCount) <= 0){
+          return 0;
+     }
+
+     fclose(fileRead);
+     
+     return atoi(strCount);
+}
+
+void iterateMessageCount(){
+
+     int currentMessageCount = getMessageCount();
+
+     FILE *filewrite;
+     filewrite = fopen(MESSAGE_COUNT_FILE_NAME, "w");
+     if (filewrite == NULL) {
+		printf("Error: Na abertura do arquivo (%s).", MESSAGE_COUNT_FILE_NAME);
+		exit(1);
+	}
+
+     char strIndex[10];
+     sprintf(strIndex, "%d", currentMessageCount + 1);
+     writeline(strIndex, filewrite);
+
+     fclose(filewrite);
+}
+
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 int *func4_1_svc(struct msg *a, struct svc_req *req) {
      
@@ -53,19 +92,12 @@ int *func4_1_svc(struct msg *a, struct svc_req *req) {
      char fname[200];
      int i = 0;
      char strIndex[10];
-     do{
-          
-          strcpy(strIndex, "");
-          sprintf(strIndex, "%d", i);
-
-          strcat(fname, a->nickname);
-          strcat(fname, "-");
-          strcat(fname, strIndex);
-          strcat(fname, ".serv");
-
-          i++;
-
-     }while(access(fname, F_OK) != -1);
+     
+     sprintf(strIndex, "%d", getMessageCount());
+     strcat(fname, a->nickname);
+     strcat(fname, "-");
+     strcat(fname, strIndex);
+     strcat(fname, ".serv");
 
      FILE *filewrite;
      filewrite = fopen(fname, "w");
@@ -77,6 +109,7 @@ int *func4_1_svc(struct msg *a, struct svc_req *req) {
      fclose(filewrite);
 
      printf ("\nSalvo content em %s\n", fname);
+     iterateMessageCount();
      
      static int ret=1;
      return (&ret);

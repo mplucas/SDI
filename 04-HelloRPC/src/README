@@ -7,7 +7,7 @@ make clean; make; clear; ./server
 %%%%% Console na sdi-2 %%%%%
 sdi-2> ./client sdi-1 mensagem
 ou
-./client localhost teste lucas file1M.client
+./client localhost lucas file1M.client
 
 %%%%% CRIAR ARQUIVOS E DISTRIBUIR NOS DIRETORIOS %%%%%
 na pasta src:
