@@ -47,10 +47,10 @@ int *func3_1_svc(struct param *a, struct svc_req *req) {
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 int *func4_1_svc(struct msg *a, struct svc_req *req) {
      
-     printf ("\nFUNC4 recebido:\nnickname: %s\nmessage: %s\n\n", a->nickname, a->content);
+     printf ("\nRecebido mensagem de %s\n", a->nickname);
 
      // finding proper name
-     char fname[110];
+     char fname[200];
      int i = 0;
      char strIndex[10];
      do{
@@ -58,8 +58,10 @@ int *func4_1_svc(struct msg *a, struct svc_req *req) {
           strcpy(strIndex, "");
           sprintf(strIndex, "%d", i);
 
-          strcpy(fname, a->nickname);
+          strcat(fname, a->nickname);
+          strcat(fname, "-");
           strcat(fname, strIndex);
+          strcat(fname, ".serv");
 
           i++;
 
@@ -67,6 +69,10 @@ int *func4_1_svc(struct msg *a, struct svc_req *req) {
 
      FILE *filewrite;
      filewrite = fopen(fname, "w");
+     if (filewrite == NULL) {
+		printf("Error: Na abertura do arquivo (%s).", fname);
+		exit(1);
+	}
      writeline(a->content, filewrite);
      fclose(filewrite);
 

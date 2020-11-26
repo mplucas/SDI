@@ -12,7 +12,6 @@ double wtime() {
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 int writeline (char *msg, FILE *file){
-  printf("%s", msg);
   fprintf(file,"%s", msg);
   return 0;
 }

@@ -11,3 +11,6 @@ lucas*
 main_file
 server
 tools.o
+*.chat
+*.serv
+*.client*
