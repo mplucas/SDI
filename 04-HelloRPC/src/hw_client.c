@@ -7,7 +7,7 @@
 
 int main (int argc, char *argv[]) {
 	
-	// setbuf(stdout, NULL);
+	//setbuf(stdout, NULL);
 
 	// Verificação dos parâmetros oriundos da console	
 	if (argc != 4) {
@@ -34,19 +34,8 @@ int main (int argc, char *argv[]) {
 		int   *ret_sendchat = NULL;
 
 		// Atribuições de valores para os parâmetros
-		strcpy (par_sendchat.nickname, argv[2]);
-		FILE *fileread;
-		char *msg = NULL;
-		fileread = fopen(argv[3],"r");
-		if (fileread == NULL) {
-			printf("Error: Na abertura dos arquivos (%s).", argv[3]);
-			exit(1);
-		}
-		do{
-			msg = readline(fileread);
-			strcat (par_sendchat.content, msg);
-		}while(strlen(msg) == 256);
-		fclose(fileread);	
+		strcpy(par_sendchat.nickname, argv[2]);
+		strcpy(par_sendchat.content, readEntireFile(argv[3]));
 
 		// Chamadas das funções remotas
 		printf ("\nEnviando mensagem de %s...\n", par_sendchat.nickname);
@@ -60,14 +49,14 @@ int main (int argc, char *argv[]) {
 	}else{ // se for polling
 
 		// Parâmetros das funçcões
-		struct msg   par_getmsgindex;
+		struct msg par_getmsgindex;
 
 		// Retorno das funções	
-		int   *ret_getmsgindex = NULL;
+		int *ret_getmsgindex = NULL;
 
 		ret_getmsgindex = getmsgindex_1(&par_getmsgindex, cl);
 
-		printf("\nIndex da mesagem do servidor: %d\n", *ret_getmsgindex);
+		
 
 	}
 

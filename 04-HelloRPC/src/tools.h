@@ -6,5 +6,14 @@
 double wtime();
 
 // Biblioteca p/ vetores
-char *readline (FILE *file);
 int writeline (char *msg, FILE *file);
+
+char *readline (FILE *file);
+
+int getMessageCount();
+
+void iterateMessageCount();
+
+#define MAX_FILE_SIZE 1050000
+
+char* readEntireFile(char* fileName);

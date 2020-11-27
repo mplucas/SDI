@@ -75,3 +75,23 @@ void iterateMessageCount(){
 
      fclose(filewrite);
 }
+
+char* readEntireFile(char* fileName){
+
+  char entireFile[MAX_FILE_SIZE];
+  char *msg = NULL;
+  FILE *fileread;
+  fileread = fopen(fileName,"r");
+  if (fileread == NULL) {
+    printf("Error: Na abertura dos arquivos (%s).", fileName);
+    exit(1);
+  }
+  do{
+    msg = readline(fileread);
+    strcat (entireFile, msg);
+  }while(strlen(msg) == 256);
+  fclose(fileread);	
+
+  char* p_entireFile = entireFile;
+  return p_entireFile;
+}

@@ -16,5 +16,6 @@ program PROG {
 		int    func3(param)  			= 4;
 		int    sendchat(msg) 			= 5;
 		int    getmsgindex(void)		= 6;
+		string receivechat(int)			= 7;
 	} = 1;
 } = 0x30009999;
