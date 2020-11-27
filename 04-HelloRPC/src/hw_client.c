@@ -8,14 +8,6 @@
 int main (int argc, char *argv[]) {
 	
 	// setbuf(stdout, NULL);
-	// Estrutura RPC de comunicação
-	CLIENT *cl;
-
-	// Parâmetros das funçcões
-	struct msg   par_f4;
-
-	// Retorno das funções	
-	int   *ret_f4 = NULL;
 
 	// Verificação dos parâmetros oriundos da console	
 	if (argc != 4) {
@@ -23,17 +15,26 @@ int main (int argc, char *argv[]) {
 		exit(1);
 	}
 
+	// Estrutura RPC de comunicação
+	CLIENT *cl;
+
+	// Conexão com servidor RPC
+	cl = clnt_create(argv[1], PROG, VERS, "tcp");
+	if (cl == NULL) {
+		clnt_pcreateerror(argv[1]);
+		exit(1);
+	}
+
 	if(strcmp(argv[3], "poll") != 0){ // se for envio de arquivo
 
-		// Conexão com servidor RPC
-		cl = clnt_create(argv[1], PROG, VERS, "tcp");
-		if (cl == NULL) {
-			clnt_pcreateerror(argv[1]);
-			exit(1);
-		}
+		// Parâmetros das funçcões
+		struct msg   par_sendchat;
+
+		// Retorno das funções	
+		int   *ret_sendchat = NULL;
 
 		// Atribuições de valores para os parâmetros
-		strcpy (par_f4.nickname, argv[2]);
+		strcpy (par_sendchat.nickname, argv[2]);
 		FILE *fileread;
 		char *msg = NULL;
 		fileread = fopen(argv[3],"r");
@@ -43,14 +44,14 @@ int main (int argc, char *argv[]) {
 		}
 		do{
 			msg = readline(fileread);
-			strcat (par_f4.content, msg);
+			strcat (par_sendchat.content, msg);
 		}while(strlen(msg) == 256);
 		fclose(fileread);	
 
 		// Chamadas das funções remotas
-		printf ("\nEnviando mensagem de %s...\n", par_f4.nickname);
-		ret_f4 = func4_1(&par_f4, cl);
-		if (ret_f4 == NULL) {
+		printf ("\nEnviando mensagem de %s...\n", par_sendchat.nickname);
+		ret_sendchat = sendchat_1(&par_sendchat, cl);
+		if (ret_sendchat == NULL) {
 			clnt_perror(cl,argv[1]);
 			exit(1);
 		}
@@ -58,7 +59,15 @@ int main (int argc, char *argv[]) {
 	
 	}else{ // se for polling
 
-		
+		// Parâmetros das funçcões
+		struct msg   par_getmsgindex;
+
+		// Retorno das funções	
+		int   *ret_getmsgindex = NULL;
+
+		ret_getmsgindex = getmsgindex_1(&par_getmsgindex, cl);
+
+		printf("\nIndex da mesagem do servidor: %d\n", *ret_getmsgindex);
 
 	}
 

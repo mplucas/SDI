@@ -10,10 +10,11 @@ struct msg {
 
 program PROG {
 	version VERS {
-		string func0(void)   = 1;
-		int    func1(string) = 2;
-		int    func2(int)    = 3;
-		int    func3(param)  = 4;
-		int    func4(msg)    = 5;
+		string func0(void)   			= 1;
+		int    func1(string) 			= 2;
+		int    func2(int)    			= 3;
+		int    func3(param)  			= 4;
+		int    sendchat(msg) 			= 5;
+		int    getmsgindex(void)		= 6;
 	} = 1;
 } = 0x30009999;

@@ -36,3 +36,42 @@ char *readline (FILE *file){
   }
   return NULL;
 }
+
+char MESSAGE_COUNT_FILE_NAME[13] = "messageCount";
+
+int getMessageCount(){
+     
+     FILE* fileRead = fopen(MESSAGE_COUNT_FILE_NAME, "r");
+     
+     if (fileRead == NULL) {
+		return 0;
+	}
+
+     char *strCount = readline(fileRead);
+
+     if(strlen(strCount) <= 0){
+          return 0;
+     }
+
+     fclose(fileRead);
+     
+     return atoi(strCount);
+}
+
+void iterateMessageCount(){
+
+     int currentMessageCount = getMessageCount();
+
+     FILE *filewrite;
+     filewrite = fopen(MESSAGE_COUNT_FILE_NAME, "w");
+     if (filewrite == NULL) {
+		printf("Error: Na abertura do arquivo (%s).", MESSAGE_COUNT_FILE_NAME);
+		exit(1);
+	}
+
+     char strIndex[10];
+     sprintf(strIndex, "%d", currentMessageCount + 1);
+     writeline(strIndex, filewrite);
+
+     fclose(filewrite);
+}
