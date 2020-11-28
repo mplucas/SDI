@@ -59,10 +59,23 @@ int main(int argc, char *argv[])
 
 		// Retorno das funções
 		int *ret_getmsgindex = NULL;
-
 		ret_getmsgindex = getmsgindex_1(&par_getmsgindex, cl);
 
-		
+		int localMessageCount = getMessageCount();
+		int serverMessageCount = *ret_getmsgindex;
+
+		for (int i = localMessageCount + 1; i <= serverMessageCount; i++)
+		{
+			// Retorno das funções
+			char **ret_receivechat = NULL;
+			ret_receivechat = receivechat_1(&i, cl);
+
+			printf("\nRecebido mensagem %d do server.", i);
+
+			char fileName[200] = "";
+
+			printf("\nSalvo content em %s\n", fileName);
+		}
 	}
 
 	return 0;

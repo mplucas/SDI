@@ -120,20 +120,8 @@ char *readEntireFile(char *fileName)
   return p_entireFile;
 }
 
-char *saveMessage(char *nickName, char *content)
+void saveMessageInFile(char *nickName, char *content, char *fileName)
 {
-
-  // finding proper name
-  char fileName[200] = "";
-  char strIndex[10] = "";
-  int msgCount = getMessageCount();
-
-  sprintf(strIndex, "%d", msgCount);
-  strcat(fileName, nickName);
-  strcat(fileName, "-");
-  strcat(fileName, strIndex);
-  strcat(fileName, ".serv");
-
   FILE *filewrite;
   filewrite = fopen(fileName, "w");
   if (filewrite == NULL)
@@ -145,7 +133,4 @@ char *saveMessage(char *nickName, char *content)
   fclose(filewrite);
 
   iterateMessageCount();
-  char *p_fileName = fileName;
-
-  return p_fileName;
 }
