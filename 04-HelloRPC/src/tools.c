@@ -67,14 +67,15 @@ int getMessageCountFromFile()
 
 int MESSAGE_COUNT = -1;
 
-int getMessageCount(){
+int getMessageCount()
+{
 
-  if(MESSAGE_COUNT == -1){
+  if (MESSAGE_COUNT == -1)
+  {
     MESSAGE_COUNT = getMessageCountFromFile();
   }
 
   return MESSAGE_COUNT;
-
 }
 
 void iterateMessageCount()
@@ -117,4 +118,34 @@ char *readEntireFile(char *fileName)
 
   char *p_entireFile = entireFile;
   return p_entireFile;
+}
+
+char *saveMessage(char *nickName, char *content)
+{
+
+  // finding proper name
+  char fileName[200] = "";
+  char strIndex[10] = "";
+  int msgCount = getMessageCount();
+
+  sprintf(strIndex, "%d", msgCount);
+  strcat(fileName, nickName);
+  strcat(fileName, "-");
+  strcat(fileName, strIndex);
+  strcat(fileName, ".serv");
+
+  FILE *filewrite;
+  filewrite = fopen(fileName, "w");
+  if (filewrite == NULL)
+  {
+    printf("Error: Na abertura do arquivo (%s).", fileName);
+    exit(1);
+  }
+  writeline(content, filewrite);
+  fclose(filewrite);
+
+  iterateMessageCount();
+  char *p_fileName = fileName;
+
+  return p_fileName;
 }

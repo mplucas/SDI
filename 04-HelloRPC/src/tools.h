@@ -17,3 +17,5 @@ int getMessageCount();
 void iterateMessageCount();
 
 char *readEntireFile(char *fileName);
+
+char *saveMessage(char *nickName, char *content);

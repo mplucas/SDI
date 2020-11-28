@@ -51,7 +51,6 @@ int *func3_1_svc(struct param *a, struct svc_req *req)
 
 void saveFileName(char *fileName)
 {
-
      FILE *filewrite;
      filewrite = fopen(SAVED_FILE_NAMES, "a+");
      if (filewrite == NULL)
@@ -68,39 +67,13 @@ void saveFileName(char *fileName)
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 int *sendchat_1_svc(struct msg *a, struct svc_req *req)
 {
-
      printf("\nRecebido mensagem de %s\n", a->nickname);
 
-     // finding proper name
-     char fileName[200] = "";
-     char strIndex[10] = "";
-     int msgCount = getMessageCount();
-
-     sprintf(strIndex, "%d", msgCount);
-     strcat(fileName, a->nickname);
-     strcat(fileName, "-");
-     strcat(fileName, strIndex);
-     strcat(fileName, ".serv");
-
-     // printf("\nb %s\n", fileName);
-
-     FILE *filewrite;
-     filewrite = fopen(fileName, "w");
-     if (filewrite == NULL)
-     {
-          printf("Error: Na abertura do arquivo (%s).", fileName);
-          exit(1);
-     }
-     writeline(a->content, filewrite);
-     fclose(filewrite);
+     char fileName[200];
+     strcpy(fileName, saveMessage(a->nickname, a->content));
 
      printf("\nSalvo content em %s\n", fileName);
-     iterateMessageCount();
      saveFileName(fileName);
-
-     // msgCount = getMessageCount();
-
-     // printf("\nc %d\n", msgCount);
 
      static int ret = 1;
      return (&ret);
@@ -109,7 +82,6 @@ int *sendchat_1_svc(struct msg *a, struct svc_req *req)
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 int *getmsgindex_1_svc(void *a, struct svc_req *req)
 {
-
      static int ret = 0;
 
      ret = getMessageCount();
@@ -119,7 +91,6 @@ int *getmsgindex_1_svc(void *a, struct svc_req *req)
 
 char *getFileNameWith(int messageIndex)
 {
-
      char savedFileNamesCSV[MAX_FILE_SIZE];
      strcpy(savedFileNamesCSV, readEntireFile(SAVED_FILE_NAMES));
 
@@ -140,7 +111,6 @@ char *getFileNameWith(int messageIndex)
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 char **receivechat_1_svc(int *a, struct svc_req *req)
 {
-
      printf("\nRecebido requisição da mensagem %d\n", *a);
 
      static char fileContent[MAX_FILE_SIZE];

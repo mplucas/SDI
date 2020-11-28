@@ -61,6 +61,8 @@ int main(int argc, char *argv[])
 		int *ret_getmsgindex = NULL;
 
 		ret_getmsgindex = getmsgindex_1(&par_getmsgindex, cl);
+
+		
 	}
 
 	return 0;
