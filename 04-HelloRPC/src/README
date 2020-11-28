@@ -11,7 +11,7 @@ ou
 
 %%%%% CRIAR ARQUIVOS E DISTRIBUIR NOS DIRETORIOS %%%%%
 na pasta src:
-make clean; make; cp server ../server; cp client ../client01; cp client ../client02; cp client ../client03; 
+clear; make clean; make; cp server ../server; cp client ../client01; cp client ../client02; cp client ../client03;
 
 
 %%%%% MAIS DICAS E EXEMPLOS %%%%%

@@ -25,9 +25,10 @@ server: hw_server.o hw_svc.o
 clean:
 	-rm *.o
 	-rm client*
+	-rm ../client*/client
 	-rm server*
+	-rm ../server/*
 	-rm main_file
-	-rm *.serv
 	-rm hw.h
 	-rm hw_clnt.c
 	-rm hw_svc.c

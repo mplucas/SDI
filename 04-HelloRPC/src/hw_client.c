@@ -5,12 +5,14 @@
 // Interface gerada pelo RPCGen a partir da IDL (hw.x) especificada
 #include "hw.h"
 
-int main (int argc, char *argv[]) {
-	
+int main(int argc, char *argv[])
+{
+
 	//setbuf(stdout, NULL);
 
-	// Verificação dos parâmetros oriundos da console	
-	if (argc != 4) {
+	// Verificação dos parâmetros oriundos da console
+	if (argc != 4)
+	{
 		printf("ERRO: ./client <hostname> <nickname> <filename/'poll'>\n");
 		exit(1);
 	}
@@ -20,46 +22,46 @@ int main (int argc, char *argv[]) {
 
 	// Conexão com servidor RPC
 	cl = clnt_create(argv[1], PROG, VERS, "tcp");
-	if (cl == NULL) {
+	if (cl == NULL)
+	{
 		clnt_pcreateerror(argv[1]);
 		exit(1);
 	}
 
-	if(strcmp(argv[3], "poll") != 0){ // se for envio de arquivo
+	if (strcmp(argv[3], "poll") != 0)
+	{ // se for envio de arquivo
 
 		// Parâmetros das funçcões
-		struct msg   par_sendchat;
+		struct msg par_sendchat;
 
-		// Retorno das funções	
-		int   *ret_sendchat = NULL;
+		// Retorno das funções
+		int *ret_sendchat = NULL;
 
 		// Atribuições de valores para os parâmetros
 		strcpy(par_sendchat.nickname, argv[2]);
 		strcpy(par_sendchat.content, readEntireFile(argv[3]));
 
 		// Chamadas das funções remotas
-		printf ("\nEnviando mensagem de %s...\n", par_sendchat.nickname);
+		printf("\nEnviando mensagem de %s...\n", par_sendchat.nickname);
 		ret_sendchat = sendchat_1(&par_sendchat, cl);
-		if (ret_sendchat == NULL) {
-			clnt_perror(cl,argv[1]);
+		if (ret_sendchat == NULL)
+		{
+			clnt_perror(cl, argv[1]);
 			exit(1);
 		}
-		printf ("Enviado com sucesso!\n");
-	
-	}else{ // se for polling
+		printf("Enviado com sucesso!\n");
+	}
+	else
+	{ // se for polling
 
 		// Parâmetros das funçcões
 		struct msg par_getmsgindex;
 
-		// Retorno das funções	
+		// Retorno das funções
 		int *ret_getmsgindex = NULL;
 
 		ret_getmsgindex = getmsgindex_1(&par_getmsgindex, cl);
-
-		
-
 	}
-
 
 	return 0;
 }
