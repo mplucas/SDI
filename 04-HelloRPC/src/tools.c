@@ -21,13 +21,13 @@ int writeline(char *msg, FILE *file)
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 char *readline(FILE *file)
 {
-  static int cont = 0;
+  int cont = 0;
   char *getLine = NULL;
   char c;
   int linha = 0;
 
   getLine = (char *)malloc(256 * sizeof(char));
-  fseek(file, cont, SEEK_SET);
+  //fseek(file, cont, SEEK_SET);
   for (;; cont++)
   {
     c = fgetc(file);
@@ -101,7 +101,6 @@ char *readEntireFile(char *fileName)
 {
 
   char entireFile[MAX_FILE_SIZE] = "";
-  char *msg = NULL;
   FILE *fileread;
   fileread = fopen(fileName, "r");
   if (fileread == NULL)
@@ -109,11 +108,15 @@ char *readEntireFile(char *fileName)
     printf("Error: Na abertura dos arquivos (%s).", fileName);
     exit(1);
   }
-  do
+  
+  char c = fgetc(fileread);
+  int i = 0;
+  while (c != EOF)
   {
-    msg = readline(fileread);
-    strcat(entireFile, msg);
-  } while (strlen(msg) == 256);
+    entireFile[i] = c;
+    i++;
+    c = fgetc(fileread);
+  }
   fclose(fileread);
 
   char *p_entireFile = entireFile;
@@ -133,4 +136,31 @@ void saveMessageInFile(char *nickName, char *content, char *fileName)
   fclose(filewrite);
 
   iterateMessageCount();
+}
+
+char *substr(char str[], int start, int end)
+{
+  int i, j;
+  char *sub;
+
+  // Verifica valores incompatíveis e
+  // retorna NULL
+  if (start >= end || end > strlen(str))
+  {
+    return NULL;
+  }
+
+  // Aloca memória para a substring
+  sub = (char *)malloc(sizeof(char) * (end - start + 1));
+
+  // Copia a substring para a variável
+  for (i = start, j = 0; i < end; i++, j++)
+  {
+    sub[j] = str[i];
+  }
+
+  // Terminador de string
+  sub[j] = '\0';
+
+  return sub;
 }

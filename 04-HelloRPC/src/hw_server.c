@@ -70,7 +70,7 @@ int *sendchat_1_svc(struct msg *a, struct svc_req *req)
      printf("\nRecebido mensagem de %s\n", a->nickname);
 
      // finding proper name
-     char fileName[200] = "";
+     char fileName[MAX_FILE_NAME_LENGTH] = "";
      char strIndex[10] = "";
      int msgCount = getMessageCount();
 
@@ -102,13 +102,15 @@ int *getmsgindex_1_svc(void *a, struct svc_req *req)
 char *getFileNameWith(int messageIndex)
 {
      char savedFileNamesCSV[MAX_FILE_SIZE] = "";
-     strcpy(savedFileNamesCSV, readEntireFile(SAVED_FILE_NAMES));
+     char *entireFileContent = readEntireFile(SAVED_FILE_NAMES);
+     strcpy(savedFileNamesCSV, entireFileContent);
 
-     int i = 0;
-
+     int i = 1;
      while (i < messageIndex)
      {
           strcpy(savedFileNamesCSV, strchr(savedFileNamesCSV, ';'));
+          strcpy(savedFileNamesCSV, substr(savedFileNamesCSV, 1, strlen(savedFileNamesCSV)));
+          i++;
      }
 
      int endIndex = strchr(savedFileNamesCSV, ';') - savedFileNamesCSV;
@@ -123,8 +125,11 @@ char **receivechat_1_svc(int *a, struct svc_req *req)
 {
      printf("\nRecebido requisição da mensagem %d\n", *a);
 
+     char fileName[MAX_FILE_NAME_LENGTH] = "";
+     strcpy(fileName, getFileNameWith(*a));
+
      static char fileContent[MAX_FILE_SIZE] = "";
-     strcpy(fileContent, readEntireFile(getFileNameWith(*a)));
+     strcpy(fileContent, readEntireFile(fileName));
 
      static char *p;
      p = fileContent;

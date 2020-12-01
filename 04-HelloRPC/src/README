@@ -2,12 +2,12 @@
 sdi-1> make clean; make
 sdi-1> sudo ./server
 ou
-make clean; make; clear; ./server
+clear; ./server
 
 %%%%% Console na sdi-2 %%%%%
 sdi-2> ./client sdi-1 mensagem
 ou
-clear; ./client localhost lucas file1M.client
+clear; ./client localhost lucas file1M.chat
 
 %%%%% CRIAR ARQUIVOS E DISTRIBUIR NOS DIRETORIOS %%%%%
 na pasta src:

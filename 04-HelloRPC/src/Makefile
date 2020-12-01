@@ -26,6 +26,8 @@ clean:
 	-rm *.o
 	-rm client*
 	-rm ../client*/client
+	-rm ../client*/*.client*
+	-rm ../client*/messageCount
 	-rm server*
 	-rm ../server/*
 	-rm main_file

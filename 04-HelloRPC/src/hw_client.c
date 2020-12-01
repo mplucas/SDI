@@ -8,7 +8,7 @@
 int main(int argc, char *argv[])
 {
 
-	//setbuf(stdout, NULL);
+	// setbuf(stdout, NULL);
 
 	// Verificação dos parâmetros oriundos da console
 	if (argc != 4)
@@ -71,6 +71,10 @@ int main(int argc, char *argv[])
 		int localMessageCount = getMessageCount();
 		int serverMessageCount = *ret_getmsgindex;
 
+		if(localMessageCount <= serverMessageCount){
+			printf("\nNenhuma mensagem nova encontrada.\n");
+		}
+
 		for (int i = localMessageCount + 1; i <= serverMessageCount; i++)
 		{
 			// Retorno das funções
@@ -80,7 +84,7 @@ int main(int argc, char *argv[])
 			printf("\nRecebido mensagem %d do server.", i);
 
 			// finding proper name
-			char fileName[200] = "";
+			char fileName[MAX_FILE_NAME_LENGTH] = "";
 			char strIndex[10] = "";
 			int msgCount = getMessageCount();
 
