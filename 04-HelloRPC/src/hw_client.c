@@ -6,6 +6,22 @@
 // Interface gerada pelo RPCGen a partir da IDL (hw.x) especificada
 #include "hw.h"
 
+int fileExists(char *fileName)
+{
+	FILE *file;
+	file = fopen(fileName, "r");
+
+	if (file != NULL)
+	{
+		fclose(file);
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -56,7 +72,6 @@ int main(int argc, char *argv[])
 	int sendChatCount = 0;
 	while (1)
 	{
-
 		//sending .chat messages --------------------------------------------------------------------------------
 		printf("\nVerificando existencia de mensagens para envio...\n");
 
@@ -72,11 +87,8 @@ int main(int argc, char *argv[])
 			strcat(sendFileName, substr(strSendIndex, strlen(strSendIndex) - 2, strlen(strSendIndex)));
 			strcat(sendFileName, ".chat");
 
-			FILE *chatFile;
-			chatFile = fopen(sendFileName, "r");
-			if (chatFile != NULL)
+			if (fileExists(sendFileName))
 			{
-				fclose(chatFile);
 				// Parâmetros das funçcões
 				struct msg par_sendchat;
 
@@ -107,9 +119,8 @@ int main(int argc, char *argv[])
 		}
 		//sending .chat messages end ----------------------------------------------------------------------------
 
-
 		// Polling ----------------------------------------------------------------------------------------------
-		printf("Realizando polling...\n");		
+		printf("Realizando polling...\n");
 		// Parâmetros das funçcões
 		struct msg par_getmsgindex;
 
