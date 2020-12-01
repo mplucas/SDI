@@ -82,7 +82,7 @@ int *sendchat_1_svc(struct msg *a, struct svc_req *req)
 
      saveMessageInFile(a->nickname, a->content, fileName);
 
-     printf("\nSalvo content em %s\n", fileName);
+     printf("Salvo content em %s\n", fileName);
      saveFileName(fileName);
 
      static int ret = 1;
@@ -161,6 +161,7 @@ int *connect_1_svc(char **a, struct svc_req *req)
      }
      else
      {
+          strcpy(CLIENT_NAMES[NUMBER_OF_CONNECTIONS], *a);
           NUMBER_OF_CONNECTIONS++;
           ret = NUMBER_OF_CONNECTIONS;
           printf("\nConexão criada para %s. ID criado: %d.\n", *a, ret);

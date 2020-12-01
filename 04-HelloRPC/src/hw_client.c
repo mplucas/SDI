@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <rpc/rpc.h>
+#include <unistd.h>
 #include "tools.h"
 
 // Interface gerada pelo RPCGen a partir da IDL (hw.x) especificada
@@ -8,12 +9,12 @@
 int main(int argc, char *argv[])
 {
 
-	setbuf(stdout, NULL);
+	// setbuf(stdout, NULL);
 
 	// Verificação dos parâmetros oriundos da console
-	if (argc != 4)
+	if (argc != 3)
 	{
-		printf("ERRO: ./client <hostname> <nickname> <filename/'poll'>\n");
+		printf("ERRO: ./client <hostname> <nickname>\n");
 		exit(1);
 	}
 
@@ -21,8 +22,6 @@ int main(int argc, char *argv[])
 	strcpy(localHost, argv[1]);
 	char nickname[200] = "";
 	strcpy(nickname, argv[2]);
-	char filename_poll[200] = "";
-	strcpy(filename_poll, argv[3]);
 
 	// Estrutura RPC de comunicação
 	CLIENT *cl;
@@ -47,38 +46,69 @@ int main(int argc, char *argv[])
 	if (clientID == -1)
 	{
 		printf("\nConexão recusada. Deve haver um outro cliente com o mesmo nickname já conectado.\n");
+		return 0;
 	}
 	else
 	{
-		printf("\nConexão realizada. ClientID recebido: %d\n", clientID);
+		printf("\nConexão realizada. ClientID recebido: %d\nEnvie mensagens ao server a começar pela adição de um arquivo %s-01.chat no repositório.\n", clientID, nickname);
 	}
 
-	if (strcmp(filename_poll, "poll") != 0)
-	{ // se for envio de arquivo
+	int sendChatCount = 0;
+	while (1)
+	{
 
-		// Parâmetros das funçcões
-		struct msg par_sendchat;
+		//sending .chat messages --------------------------------------------------------------------------------
+		printf("\nVerificando existencia de mensagens para envio...\n");
 
-		// Retorno das funções
-		int *ret_sendchat = NULL;
-
-		// Atribuições de valores para os parâmetros
-		strcpy(par_sendchat.nickname, nickname);
-		strcpy(par_sendchat.content, readEntireFile(filename_poll));
-
-		// Chamadas das funções remotas
-		printf("\nEnviando mensagem de %s...\n", par_sendchat.nickname);
-		ret_sendchat = sendchat_1(&par_sendchat, cl);
-		if (ret_sendchat == NULL)
+		int hasSendMessages = 1;
+		while (hasSendMessages)
 		{
-			clnt_perror(cl, localHost);
-			exit(1);
-		}
-		printf("Enviado com sucesso!\n");
-	}
-	else
-	{ // se for polling
+			char sendFileName[MAX_FILE_NAME_LENGTH] = "";
+			char strSendIndex[10] = "";
 
+			sprintf(strSendIndex, "0%d", sendChatCount + 1);
+			strcat(sendFileName, nickname);
+			strcat(sendFileName, "-");
+			strcat(sendFileName, substr(strSendIndex, strlen(strSendIndex) - 2, strlen(strSendIndex)));
+			strcat(sendFileName, ".chat");
+
+			FILE *chatFile;
+			chatFile = fopen(sendFileName, "r");
+			if (chatFile != NULL)
+			{
+				fclose(chatFile);
+				// Parâmetros das funçcões
+				struct msg par_sendchat;
+
+				// Retorno das funções
+				int *ret_sendchat = NULL;
+
+				// Atribuições de valores para os parâmetros
+				strcpy(par_sendchat.nickname, nickname);
+				strcpy(par_sendchat.content, readEntireFile(sendFileName));
+
+				// Chamadas das funções remotas
+				printf("Enviando mensagem arquivo %s...\n", sendFileName);
+				ret_sendchat = sendchat_1(&par_sendchat, cl);
+				if (ret_sendchat == NULL)
+				{
+					clnt_perror(cl, localHost);
+					exit(1);
+				}
+				printf("Enviado %s com sucesso!\n", sendFileName);
+				sendChatCount++;
+			}
+			else
+			{
+				printf("Nenhuma mensagem para envio encontrada com o nome %s.\n", sendFileName);
+				hasSendMessages = 0;
+			}
+		}
+		//sending .chat messages end ----------------------------------------------------------------------------
+
+
+		// Polling ----------------------------------------------------------------------------------------------
+		printf("Realizando polling...\n");		
 		// Parâmetros das funçcões
 		struct msg par_getmsgindex;
 
@@ -89,9 +119,9 @@ int main(int argc, char *argv[])
 		int localMessageCount = getMessageCount();
 		int serverMessageCount = *ret_getmsgindex;
 
-		if (localMessageCount <= serverMessageCount)
+		if (localMessageCount >= serverMessageCount)
 		{
-			printf("\nNenhuma mensagem nova encontrada.\n");
+			printf("Nenhuma nova mensagem do server encontrada.\n");
 		}
 
 		for (int i = localMessageCount + 1; i <= serverMessageCount; i++)
@@ -100,23 +130,30 @@ int main(int argc, char *argv[])
 			char **ret_receivechat = NULL;
 			ret_receivechat = receivechat_1(&i, cl);
 
-			printf("\nRecebido mensagem %d do server.", i);
+			printf("Recebido mensagem %d do server.", i);
 
 			// finding proper name
-			char fileName[MAX_FILE_NAME_LENGTH] = "";
-			char strIndex[10] = "";
+			char receiveFileName[MAX_FILE_NAME_LENGTH] = "";
+			char strReceiveIndex[10] = "";
 			int msgCount = getMessageCount();
 
-			sprintf(strIndex, "%d", msgCount);
-			strcat(fileName, nickname);
-			strcat(fileName, "-");
-			strcat(fileName, strIndex);
-			strcat(fileName, ".client");
+			sprintf(strReceiveIndex, "%d", msgCount);
+			strcat(receiveFileName, nickname);
+			strcat(receiveFileName, "-");
+			strcat(receiveFileName, strReceiveIndex);
+			strcat(receiveFileName, ".client");
+			char strClientID[10] = "";
+			sprintf(strClientID, "0%d", clientID);
+			strcat(receiveFileName, substr(strClientID, strlen(strClientID) - 2, strlen(strClientID)));
 
-			saveMessageInFile(nickname, *ret_receivechat, fileName);
+			saveMessageInFile(nickname, *ret_receivechat, receiveFileName);
 
-			printf("\nSalvo content em %s\n", fileName);
+			printf("Salvo content em %s\n", receiveFileName);
 		}
+		// Polling end ------------------------------------------------------------------------------------------
+
+		sleep(5);
+		printf("\nRefazendo envios de arquivos \".chat\" e polling do server. (5s)\n");
 	}
 
 	return 0;
