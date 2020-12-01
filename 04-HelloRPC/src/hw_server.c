@@ -135,3 +135,37 @@ char **receivechat_1_svc(int *a, struct svc_req *req)
      p = fileContent;
      return (&p);
 }
+
+int NUMBER_OF_CONNECTIONS = 0;
+char CLIENT_NAMES[100][100];
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+int *connect_1_svc(char **a, struct svc_req *req)
+{
+     int clientExists = 0;
+
+     for (int i = 0; i < 100; i++)
+     {
+          if (strcmp(CLIENT_NAMES[i], *a) == 0)
+          {
+               clientExists = 1;
+               break;
+          }
+     }
+
+     int ret;
+     if (clientExists)
+     {
+          ret = -1;
+          printf("\nConexão recusada de %s. Já existe outro cliente com esse nickname conectado.\n", *a);
+     }
+     else
+     {
+          NUMBER_OF_CONNECTIONS++;
+          ret = NUMBER_OF_CONNECTIONS;
+          printf("\nConexão criada para %s. ID criado: %d.\n", *a, ret);
+     }
+
+     int *p_ret = &ret;
+     return (p_ret);
+}

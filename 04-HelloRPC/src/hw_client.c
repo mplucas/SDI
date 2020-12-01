@@ -8,7 +8,7 @@
 int main(int argc, char *argv[])
 {
 
-	// setbuf(stdout, NULL);
+	setbuf(stdout, NULL);
 
 	// Verificação dos parâmetros oriundos da console
 	if (argc != 4)
@@ -33,6 +33,24 @@ int main(int argc, char *argv[])
 	{
 		clnt_pcreateerror(localHost);
 		exit(1);
+	}
+
+	// Parâmetros das funçcões
+	char *par_connect;
+	par_connect = nickname;
+
+	// Retorno das funções
+	int *ret_connect = NULL;
+	ret_connect = connect_1(&par_connect, cl);
+	int clientID = *ret_connect;
+
+	if (clientID == -1)
+	{
+		printf("\nConexão recusada. Deve haver um outro cliente com o mesmo nickname já conectado.\n");
+	}
+	else
+	{
+		printf("\nConexão realizada. ClientID recebido: %d\n", clientID);
 	}
 
 	if (strcmp(filename_poll, "poll") != 0)
@@ -71,7 +89,8 @@ int main(int argc, char *argv[])
 		int localMessageCount = getMessageCount();
 		int serverMessageCount = *ret_getmsgindex;
 
-		if(localMessageCount <= serverMessageCount){
+		if (localMessageCount <= serverMessageCount)
+		{
 			printf("\nNenhuma mensagem nova encontrada.\n");
 		}
 

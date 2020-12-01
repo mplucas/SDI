@@ -108,7 +108,7 @@ char *readEntireFile(char *fileName)
     printf("Error: Na abertura dos arquivos (%s).", fileName);
     exit(1);
   }
-  
+
   char c = fgetc(fileread);
   int i = 0;
   while (c != EOF)
