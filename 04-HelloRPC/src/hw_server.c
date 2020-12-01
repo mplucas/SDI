@@ -70,13 +70,14 @@ int *sendchat_1_svc(struct msg *a, struct svc_req *req)
      char strIndex[10] = "";
      int msgCount = getMessageCount();
 
-     sprintf(strIndex, "%d", msgCount);
+     sprintf(strIndex, "0%d", msgCount);
      strcat(fileName, a->nickname);
      strcat(fileName, "-");
-     strcat(fileName, strIndex);
+     strcat(fileName, substr(strIndex, strlen(strIndex) - 2, strlen(strIndex)));
      strcat(fileName, ".serv");
 
      saveContentInFile(a->content, fileName);
+     iterateMessageCount();
 
      printf("Salvo content em %s\n", fileName);
      saveFileName(fileName);

@@ -89,8 +89,6 @@ void saveContentInFile(char *content, char *fileName)
   }
   writeline(content, filewrite);
   fclose(filewrite);
-
-  iterateMessageCount();
 }
 
 char *substr(char str[], int start, int end)

@@ -97,6 +97,7 @@ int main(int argc, char *argv[])
 				}
 				printf("Enviado %s com sucesso!\n", sendFileName);
 				sendChatCount++;
+				iterateMessageCount();
 			}
 			else
 			{
@@ -137,16 +138,17 @@ int main(int argc, char *argv[])
 			char strReceiveIndex[10] = "";
 			int msgCount = getMessageCount();
 
-			sprintf(strReceiveIndex, "%d", msgCount);
+			sprintf(strReceiveIndex, "0%d", msgCount);
 			strcat(receiveFileName, nickname);
 			strcat(receiveFileName, "-");
-			strcat(receiveFileName, strReceiveIndex);
+			strcat(receiveFileName, substr(strReceiveIndex, strlen(strReceiveIndex) - 2, strlen(strReceiveIndex)));
 			strcat(receiveFileName, ".client");
 			char strClientID[10] = "";
 			sprintf(strClientID, "0%d", clientID);
 			strcat(receiveFileName, substr(strClientID, strlen(strClientID) - 2, strlen(strClientID)));
 
 			saveContentInFile(*ret_receivechat, receiveFileName);
+			iterateMessageCount();
 
 			printf("Salvo content em %s\n", receiveFileName);
 		}
