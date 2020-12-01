@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
 			sprintf(strClientID, "0%d", clientID);
 			strcat(receiveFileName, substr(strClientID, strlen(strClientID) - 2, strlen(strClientID)));
 
-			saveMessageInFile(nickname, *ret_receivechat, receiveFileName);
+			saveContentInFile(*ret_receivechat, receiveFileName);
 
 			printf("Salvo content em %s\n", receiveFileName);
 		}

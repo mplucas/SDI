@@ -19,6 +19,6 @@ void iterateMessageCount();
 
 char *readEntireFile(char *fileName);
 
-void saveMessageInFile(char *nickName, char *content, char *fileName);
+void saveContentInFile(char *content, char *fileName);
 
 char *substr(char str[], int start, int end);

@@ -7,12 +7,19 @@ clear; ./server
 %%%%% Console na sdi-2 %%%%%
 sdi-2> ./client sdi-1 mensagem
 ou
-clear; ./client localhost lucas file1M.chat
+clear; ./client localhost lucas
 
-%%%%% CRIAR ARQUIVOS E DISTRIBUIR NOS DIRETORIOS %%%%%
-na pasta src:
-clear; make clean; make; cp server ../server; cp client ../client01; cp client ../client02; cp client ../client03;
+%%%%% EXEMPLO PARA CRIAR ARQUIVOS E DISTRIBUIR NOS DIRETORIOS %%%%%
+na raiz do projeto:
+> mkdir server
+> cd src
+> clear; make clean; make; cp server ../server; cp client ../client01; cp client ../client02; cp client ../client03;
 
+na pasta server executar o arquivo server
+> ./server
+
+na pasta dos clientes executar o arquivo client seguido do host e do nickname do client
+> ./client localhost teste
 
 %%%%% MAIS DICAS E EXEMPLOS %%%%%
 https://docs.oracle.com/cd/E19683-01/816-1435/rpcgenpguide-21470/index.html

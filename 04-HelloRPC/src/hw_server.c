@@ -47,21 +47,17 @@ int *func3_1_svc(struct param *a, struct svc_req *req)
      return (&ret);
 }
 
-#define SAVED_FILE_NAMES "savedFileNames"
+char savedFileNames[100][MAX_FILE_NAME_LENGTH];
 
 void saveFileName(char *fileName)
 {
-     FILE *filewrite;
-     filewrite = fopen(SAVED_FILE_NAMES, "a+");
-     if (filewrite == NULL)
+     int i = 0;
+     while (strlen(savedFileNames[i]) != 0)
      {
-          printf("Error: Na abertura do arquivo (%s).", SAVED_FILE_NAMES);
-          exit(1);
+          i++;
      }
 
-     strcat(fileName, ";");
-     writeline(fileName, filewrite);
-     fclose(filewrite);
+     strcpy(savedFileNames[i], fileName);
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -80,7 +76,7 @@ int *sendchat_1_svc(struct msg *a, struct svc_req *req)
      strcat(fileName, strIndex);
      strcat(fileName, ".serv");
 
-     saveMessageInFile(a->nickname, a->content, fileName);
+     saveContentInFile(a->content, fileName);
 
      printf("Salvo content em %s\n", fileName);
      saveFileName(fileName);
@@ -101,23 +97,19 @@ int *getmsgindex_1_svc(void *a, struct svc_req *req)
 
 char *getFileNameWith(int messageIndex)
 {
-     char savedFileNamesCSV[MAX_FILE_SIZE] = "";
-     char *entireFileContent = readEntireFile(SAVED_FILE_NAMES);
-     strcpy(savedFileNamesCSV, entireFileContent);
+     char savedFileName[MAX_FILE_NAME_LENGTH] = "";
 
-     int i = 1;
-     while (i < messageIndex)
+     if (messageIndex - 1 >= 0 && messageIndex - 1 <= 99)
      {
-          strcpy(savedFileNamesCSV, strchr(savedFileNamesCSV, ';'));
-          strcpy(savedFileNamesCSV, substr(savedFileNamesCSV, 1, strlen(savedFileNamesCSV)));
-          i++;
+          strcpy(savedFileName, savedFileNames[messageIndex - 1]);
+     }
+     else
+     {
+          strcpy(savedFileName, "ID da mensagem requisitada invalido.");
      }
 
-     int endIndex = strchr(savedFileNamesCSV, ';') - savedFileNamesCSV;
-     savedFileNamesCSV[endIndex] = '\0';
-
-     char *p_savedFileNamesCSV = savedFileNamesCSV;
-     return p_savedFileNamesCSV;
+     char *p_savedFileName = savedFileName;
+     return p_savedFileName;
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -130,6 +122,8 @@ char **receivechat_1_svc(int *a, struct svc_req *req)
 
      static char fileContent[MAX_FILE_SIZE] = "";
      strcpy(fileContent, readEntireFile(fileName));
+
+     printf("Enviando content do arquivo %s\n", fileName);
 
      static char *p;
      p = fileContent;

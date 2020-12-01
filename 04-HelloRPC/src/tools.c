@@ -40,61 +40,16 @@ char *readline(FILE *file)
   return NULL;
 }
 
-#define MESSAGE_COUNT_FILE_NAME "messageCount"
-
-int getMessageCountFromFile()
-{
-
-  FILE *fileRead;
-  fileRead = fopen(MESSAGE_COUNT_FILE_NAME, "r");
-
-  if (fileRead == NULL)
-  {
-    return 0;
-  }
-
-  char *strCount = readline(fileRead);
-
-  if (strlen(strCount) <= 0)
-  {
-    fclose(fileRead);
-    return 0;
-  }
-
-  fclose(fileRead);
-  return atoi(strCount);
-}
-
-int MESSAGE_COUNT = -1;
+int MESSAGE_COUNT = 0;
 
 int getMessageCount()
 {
-
-  if (MESSAGE_COUNT == -1)
-  {
-    MESSAGE_COUNT = getMessageCountFromFile();
-  }
-
   return MESSAGE_COUNT;
 }
 
 void iterateMessageCount()
 {
   MESSAGE_COUNT++;
-
-  FILE *filewrite;
-  filewrite = fopen(MESSAGE_COUNT_FILE_NAME, "w");
-  if (filewrite == NULL)
-  {
-    printf("Error: Na abertura do arquivo (%s).", MESSAGE_COUNT_FILE_NAME);
-    exit(1);
-  }
-
-  char strIndex[10] = "";
-  sprintf(strIndex, "%d", MESSAGE_COUNT);
-  writeline(strIndex, filewrite);
-
-  fclose(filewrite);
 }
 
 char *readEntireFile(char *fileName)
@@ -123,7 +78,7 @@ char *readEntireFile(char *fileName)
   return p_entireFile;
 }
 
-void saveMessageInFile(char *nickName, char *content, char *fileName)
+void saveContentInFile(char *content, char *fileName)
 {
   FILE *filewrite;
   filewrite = fopen(fileName, "w");
