@@ -24,9 +24,24 @@ na pasta dos clientes executar o arquivo client seguido do host e do nickname do
 
 - Exemplo professor
 obter acesso as maquinas remotas da disciplina (vpn e ssh);
+
+na sua maquina local:
 na pasta src:
-> clear; make clean; make; cp server ../exemplos_remotos/server; cp client ../exemplos_remotos/john; cp client ../exemplos_remotos/paul; cp client ../exemplos_remotos/mary
+> clear; make clean; make; cp server ../lucas_meneghelli/server; cp client ../lucas_meneghelli/john; cp client ../lucas_meneghelli/paul; cp client ../lucas_meneghelli/mary
+na pasta raiz do projeto:
 > scp -r lucas_meneghelli ens1:/home/alu2020s2/
+
+agora acessando por ssh as maquinas:
+na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli/server
+> ./server
+em outro terminal, na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli/paul
+> ./client localhost paul
+em outro terminal, na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli/john
+> ./client localhost john
+em outro terminal, na maquina ens2, acessar /home/alu2020s2/lucas_meneghelli/mary
+> ./client ens1 mary
+
+verificar que o resultado é o desejado segundo o exemplo do moodle.
 
 %%%%% MAIS DICAS E EXEMPLOS %%%%%
 https://docs.oracle.com/cd/E19683-01/816-1435/rpcgenpguide-21470/index.html
