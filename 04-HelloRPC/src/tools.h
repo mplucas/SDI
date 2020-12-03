@@ -13,9 +13,9 @@ int writeline(char *msg, FILE *file);
 
 char *readline(FILE *file);
 
-int getMessageCount();
+int getMessageIndex();
 
-void iterateMessageCount();
+void iterateMessageIndex();
 
 char *readEntireFile(char *fileName);
 

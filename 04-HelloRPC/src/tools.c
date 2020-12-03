@@ -40,16 +40,16 @@ char *readline(FILE *file)
   return NULL;
 }
 
-int MESSAGE_COUNT = 0;
+int MESSAGE_INDEX = 1;
 
-int getMessageCount()
+int getMessageIndex()
 {
-  return MESSAGE_COUNT;
+  return MESSAGE_INDEX;
 }
 
-void iterateMessageCount()
+void iterateMessageIndex()
 {
-  MESSAGE_COUNT++;
+  MESSAGE_INDEX++;
 }
 
 char *readEntireFile(char *fileName)

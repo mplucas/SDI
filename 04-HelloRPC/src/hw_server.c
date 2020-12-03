@@ -68,16 +68,16 @@ int *sendchat_1_svc(struct msg *a, struct svc_req *req)
      // finding proper name
      char fileName[MAX_FILE_NAME_LENGTH] = "";
      char strIndex[10] = "";
-     int msgCount = getMessageCount();
+     int msgIndex = getMessageIndex();
 
-     sprintf(strIndex, "0%d", msgCount);
+     sprintf(strIndex, "0%d", msgIndex);
      strcat(fileName, a->nickname);
      strcat(fileName, "-");
      strcat(fileName, substr(strIndex, strlen(strIndex) - 2, strlen(strIndex)));
      strcat(fileName, ".serv");
 
      saveContentInFile(a->content, fileName);
-     iterateMessageCount();
+     iterateMessageIndex();
 
      printf("Salvo content em %s\n", fileName);
      saveFileName(fileName);
@@ -91,7 +91,7 @@ int *getmsgindex_1_svc(void *a, struct svc_req *req)
 {
      static int ret = 0;
 
-     ret = getMessageCount();
+     ret = getMessageIndex();
 
      return (&ret);
 }
@@ -113,8 +113,24 @@ char *getFileNameWith(int messageIndex)
      return p_savedFileName;
 }
 
+char *getNicknameFromFileName(char *fileName)
+{
+     char nickname[MAX_FILE_NAME_LENGTH] = "";
+
+     int i = 0;
+     for (i = 0; i < strlen(fileName); i++)
+     {
+          if (fileName[i] == '-')
+          {
+               break;
+          }
+     }
+
+     return substr(fileName, 0, i);
+}
+
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-char **receivechat_1_svc(int *a, struct svc_req *req)
+struct msg *receivechat_1_svc(int *a, struct svc_req *req)
 {
      printf("\nRecebido requisição da mensagem %d\n", *a);
 
@@ -126,8 +142,12 @@ char **receivechat_1_svc(int *a, struct svc_req *req)
 
      printf("Enviando content do arquivo %s\n", fileName);
 
-     static char *p;
-     p = fileContent;
+     struct msg returnMsg;
+     strcpy(returnMsg.nickname, getNicknameFromFileName(fileName));
+     strcpy(returnMsg.content, fileContent);
+
+     static struct msg p;
+     p = returnMsg;
      return (&p);
 }
 

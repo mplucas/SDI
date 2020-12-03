@@ -10,6 +10,7 @@ ou
 clear; ./client localhost lucas
 
 %%%%% EXEMPLO PARA CRIAR ARQUIVOS E DISTRIBUIR NOS DIRETORIOS %%%%%
+- Exemplo local:
 na raiz do projeto:
 > mkdir server
 > cd src
@@ -20,6 +21,12 @@ na pasta server executar o arquivo server
 
 na pasta dos clientes executar o arquivo client seguido do host e do nickname do client
 > ./client localhost teste
+
+- Exemplo professor
+obter acesso as maquinas remotas da disciplina (vpn e ssh);
+na pasta src:
+> clear; make clean; make; cp server ../exemplos_remotos/server; cp client ../exemplos_remotos/john; cp client ../exemplos_remotos/paul; cp client ../exemplos_remotos/mary
+> scp -r lucas_meneghelli ens1:/home/alu2020s2/
 
 %%%%% MAIS DICAS E EXEMPLOS %%%%%
 https://docs.oracle.com/cd/E19683-01/816-1435/rpcgenpguide-21470/index.html

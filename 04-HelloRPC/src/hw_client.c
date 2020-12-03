@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 		printf("\nConexão realizada. ClientID recebido: %d\nEnvie mensagens ao server a começar pela adição de um arquivo %s-01.chat no repositório.\n", clientID, nickname);
 	}
 
-	int sendChatCount = 0;
+	int sendChatIndex = 1;
 	while (1)
 	{
 		//sending .chat messages --------------------------------------------------------------------------------
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 			char sendFileName[MAX_FILE_NAME_LENGTH] = "";
 			char strSendIndex[10] = "";
 
-			sprintf(strSendIndex, "0%d", sendChatCount + 1);
+			sprintf(strSendIndex, "0%d", sendChatIndex);
 			strcat(sendFileName, nickname);
 			strcat(sendFileName, "-");
 			strcat(sendFileName, substr(strSendIndex, strlen(strSendIndex) - 2, strlen(strSendIndex)));
@@ -108,8 +108,7 @@ int main(int argc, char *argv[])
 					exit(1);
 				}
 				printf("Enviado %s com sucesso!\n", sendFileName);
-				sendChatCount++;
-				iterateMessageCount();
+				sendChatIndex++;
 			}
 			else
 			{
@@ -128,40 +127,48 @@ int main(int argc, char *argv[])
 		int *ret_getmsgindex = NULL;
 		ret_getmsgindex = getmsgindex_1(&par_getmsgindex, cl);
 
-		int localMessageCount = getMessageCount();
-		int serverMessageCount = *ret_getmsgindex;
+		int localMessageIndex = getMessageIndex();
+		int serverMessageIndex = *ret_getmsgindex;
 
-		if (localMessageCount >= serverMessageCount)
+		if (localMessageIndex >= serverMessageIndex)
 		{
 			printf("Nenhuma nova mensagem do server encontrada.\n");
 		}
 
-		for (int i = localMessageCount + 1; i <= serverMessageCount; i++)
+		for (int i = localMessageIndex; i < serverMessageIndex; i++)
 		{
 			// Retorno das funções
-			char **ret_receivechat = NULL;
+			struct msg *ret_receivechat = NULL;
 			ret_receivechat = receivechat_1(&i, cl);
 
-			printf("Recebido mensagem %d do server.", i);
+			printf("Recebido mensagem %d do server.\n", i);
 
-			// finding proper name
-			char receiveFileName[MAX_FILE_NAME_LENGTH] = "";
-			char strReceiveIndex[10] = "";
-			int msgCount = getMessageCount();
+			if (strcmp(ret_receivechat->nickname, nickname) == 0)
+			{
+				printf("Mensagem %d é uma mensagem enviada, não salvando a mensagem.\n", i);
+			}
+			else
+			{
 
-			sprintf(strReceiveIndex, "0%d", msgCount);
-			strcat(receiveFileName, nickname);
-			strcat(receiveFileName, "-");
-			strcat(receiveFileName, substr(strReceiveIndex, strlen(strReceiveIndex) - 2, strlen(strReceiveIndex)));
-			strcat(receiveFileName, ".client");
-			char strClientID[10] = "";
-			sprintf(strClientID, "0%d", clientID);
-			strcat(receiveFileName, substr(strClientID, strlen(strClientID) - 2, strlen(strClientID)));
+				// finding proper name
+				char receiveFileName[MAX_FILE_NAME_LENGTH] = "";
+				char strReceiveIndex[10] = "";
+				int msgIndex = getMessageIndex();
 
-			saveContentInFile(*ret_receivechat, receiveFileName);
-			iterateMessageCount();
+				sprintf(strReceiveIndex, "0%d", msgIndex);
+				strcat(receiveFileName, nickname);
+				strcat(receiveFileName, "-");
+				strcat(receiveFileName, substr(strReceiveIndex, strlen(strReceiveIndex) - 2, strlen(strReceiveIndex)));
+				strcat(receiveFileName, ".client");
+				char strClientID[10] = "";
+				sprintf(strClientID, "0%d", clientID);
+				strcat(receiveFileName, substr(strClientID, strlen(strClientID) - 2, strlen(strClientID)));
 
-			printf("Salvo content em %s\n", receiveFileName);
+				saveContentInFile(ret_receivechat->content, receiveFileName);
+				printf("Salvo content em %s\n", receiveFileName);
+			}
+
+			iterateMessageIndex();
 		}
 		// Polling end ------------------------------------------------------------------------------------------
 
