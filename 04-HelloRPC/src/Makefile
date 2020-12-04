@@ -1,4 +1,21 @@
-all: tools.o client server main_file
+all: tests tools.o client server main_file distribute
+
+tests: tests
+	- mkdir ../localtest
+	- mkdir ../localtest/server
+	- mkdir ../localtest/client01
+	- base64 /dev/urandom | head -c 1M > ../localtest/client01/lucas-01.chat
+	- base64 /dev/urandom | head -c 1M > ../localtest/client01/lucas-02.chat
+	- mkdir ../localtest/client02
+	- base64 /dev/urandom | head -c 1M > ../localtest/client02/pedro-01.chat
+	- mkdir ../localtest/client03
+	- base64 /dev/urandom | head -c 1M > ../localtest/client03/joao-01.chat
+	- mkdir ../lucas_meneghelli
+	- mkdir ../lucas_meneghelli/server
+	- mkdir ../lucas_meneghelli/paul
+	- base64 /dev/urandom | head -c 1M > ../lucas_meneghelli/paul/paul-01.chat
+	- mkdir ../lucas_meneghelli/john
+	- mkdir ../lucas_meneghelli/mary
 
 hw.h: hw.x
 	rpcgen hw.x
@@ -20,6 +37,16 @@ client: hw_client.o hw_clnt.o hw_xdr.o
 server: hw_server.o hw_svc.o
 	gcc -o server tools.o hw_server.o hw_svc.o hw_xdr.o -lnsl
 
+distribute: distribute
+	-cp server ../lucas_meneghelli/server
+	-cp client ../lucas_meneghelli/john
+	-cp client ../lucas_meneghelli/paul
+	-cp client ../lucas_meneghelli/mary
+	-cp server ../localtest/server
+	-cp client ../localtest/client01
+	-cp client ../localtest/client02
+	-cp client ../localtest/client03
+
 .PHONY: clean
 
 clean:
@@ -28,8 +55,9 @@ clean:
 	-rm ../client*/client
 	-rm ../client*/*.client*
 	-rm server*
-	-rm ../server/*
 	-rm main_file
 	-rm hw.h
 	-rm hw_clnt.c
 	-rm hw_svc.c
+	-rm ../localtest -r
+	-rm ../lucas_meneghelli -r

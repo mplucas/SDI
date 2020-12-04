@@ -14,5 +14,5 @@ src/tools.o
 src/*.chat
 src/*.serv
 src/*.client*
-client*/
-server/
+localtest/
+lucas_meneghelli/

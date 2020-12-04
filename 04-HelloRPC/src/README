@@ -4,7 +4,8 @@ obter acesso as maquinas remotas da disciplina (vpn e ssh);
 
 na sua maquina local:
 na pasta src:
-> clear; make clean; make; cp server ../lucas_meneghelli/server; cp client ../lucas_meneghelli/john; cp client ../lucas_meneghelli/paul; cp client ../lucas_meneghelli/mary
+> make clean; make
+
 na pasta raiz do projeto:
 > scp -r lucas_meneghelli ens1:/home/alu2020s2/
 
@@ -22,13 +23,17 @@ verificar que o resultado é o desejado segundo o exemplo do Moodle.
 
 
 - Exemplo local:
-na raiz do projeto:
-> mkdir server
-> cd src
-> clear; make clean; make; cp server ../server; cp client ../client01; cp client ../client02; cp client ../client03;
+na pasta src:
+> make clean; make
 
-na pasta server executar o arquivo server
+na pasta localtest/server:
 > ./server
 
-na pasta dos clientes executar o arquivo client seguido do host e do nickname do client
-> ./client localhost teste
+em outro terminal, na pasta localtest/client01:
+> ./client localhost lucas
+
+em outro terminal, na pasta localtest/client02:
+> ./client localhost pedro
+
+em outro terminal, na pasta localtest/client03:
+> ./client localhost joao
