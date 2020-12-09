@@ -145,11 +145,10 @@ int main(int argc, char *argv[])
 
 			if (strcmp(ret_receivechat->nickname, nickname) == 0)
 			{
-				printf("Mensagem %d é uma mensagem enviada, não salvando a mensagem.\n", i);
+				printf("Mensagem %d é uma mensagem enviada por você mesmo, não salvando a mensagem.\n", i);
 			}
 			else
 			{
-
 				// finding proper name
 				char receiveFileName[MAX_FILE_NAME_LENGTH] = "";
 				char strReceiveIndex[10] = "";
@@ -163,6 +162,8 @@ int main(int argc, char *argv[])
 				char strClientID[10] = "";
 				sprintf(strClientID, "0%d", clientID);
 				strcat(receiveFileName, substr(strClientID, strlen(strClientID) - 2, strlen(strClientID)));
+
+				printf("%s enviou:\n%s\n", ret_receivechat->nickname, ret_receivechat->content);
 
 				saveContentInFile(ret_receivechat->content, receiveFileName);
 				printf("Salvo content em %s\n", receiveFileName);
