@@ -9,9 +9,9 @@ JFLAGS = -g
 	$(JAVAC) $(JFLAGS) $*.java
 
 CLASSES = \
-	HelloServer.java\
-	HelloClient.java\
-	HelloWorld.java
+	Server.java\
+	Client.java\
+	Chat.java
 
 default: classes
 

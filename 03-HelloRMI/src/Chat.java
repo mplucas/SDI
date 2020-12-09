@@ -1,6 +1,6 @@
-/** HelloWorld.java **/
+/** Chat.java **/
 import java.rmi.*;
  
-public interface HelloWorld extends Remote {
+public interface Chat extends Remote {
    public String hello() throws RemoteException;
 }
