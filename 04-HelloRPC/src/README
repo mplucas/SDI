@@ -37,3 +37,8 @@ em outro terminal, na pasta localtest/client02:
 
 em outro terminal, na pasta localtest/client03:
 > ./client localhost joao
+
+OBSERVAÇÕES:
+- segundo o professor, é obrigatório o print da mensagem recebidas no cliente. Por isso, as mensagens utilizadas (de 1M) podem floodar a tela. No entanto, apenas
+foi seguido a metodologia do trabalho pedida pelo professor. Caso se deseje verificar melhor a solução sem o flood, comentar o printf da linha 166 do
+arquivo hw_client.c e rodar na pasta src novamente make clean; make.
