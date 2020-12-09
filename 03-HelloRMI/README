@@ -1,6 +1,10 @@
-CODIGO VERSAO > 1.8
-javac *.java
-// Nao e necessario se usar Create.RmiResgirtu
-//rmiregistry 9999&
-java Server
-java Client localhost
+######## Teste local
+
+na pasta raiz:
+> make clean; make;
+
+na pasta bin
+> java Server
+
+em outro terminal, na pasta bin
+> java Client localhost

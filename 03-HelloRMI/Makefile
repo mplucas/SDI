@@ -1,21 +1,10 @@
-# GNU Makefile
-JAR=/usr/local/jdk1.8.0_131/bin/jar
-JAVA=/usr/local/jdk1.8.0_131/bin/java
-JAVAC=/usr/local/jdk1.8.0_131/bin/javac
+all: classes
 
-JFLAGS = -g 
-.SUFFIXES: .java .class
-.java.class:
-	$(JAVAC) $(JFLAGS) $*.java
+classes: classes
+	- mkdir bin
+	- javac src/*.java -d bin
 
-CLASSES = \
-	Server.java\
-	Client.java\
-	Chat.java
-
-default: classes
-
-classes: $(CLASSES:.java=.class)
+.PHONY: clean
 
 clean:
-	rm -f *.class 
+	-rm bin -r

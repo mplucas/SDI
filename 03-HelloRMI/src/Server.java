@@ -6,7 +6,8 @@ import java.rmi.server.*;
 import java.rmi.registry.*;
 
 public class Server implements Chat {
-   public Server() {}
+   public Server() {
+   }
    // main()
    // hello()
 
@@ -17,7 +18,7 @@ public class Server implements Chat {
          Chat stub = (Chat) UnicastRemoteObject.exportObject(server, 0);
          // Registra a stub no RMI Registry para que ela seja obtAida pelos clientes
          Registry registry = LocateRegistry.createRegistry(6600);
-         //Registry registry = LocateRegistry.getRegistry(9999);
+         // Registry registry = LocateRegistry.getRegistry(9999);
          registry.bind("Hello", stub);
          System.out.println("Servidor pronto");
       } catch (Exception ex) {
@@ -25,8 +26,8 @@ public class Server implements Chat {
       }
    }
 
-public String hello() throws RemoteException {
-   System.out.println("Executando hello()");
-   return "Hello!!!";
-}
+   public String hello() throws RemoteException {
+      System.out.println("Executando hello()");
+      return "Hello!!!";
+   }
 }
