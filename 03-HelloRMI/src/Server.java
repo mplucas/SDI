@@ -65,7 +65,7 @@ public class Server implements Chat {
    }
 
    @Override
-   public void sendchat(Message message) throws RemoteException {
+   public void sendChat(Message message) throws RemoteException {
 
       System.out.println("Recebido mensagem de " + message.getNickName() + ".");
 
@@ -85,5 +85,33 @@ public class Server implements Chat {
 
    private int getCurrentMessageIndex() {
       return savedFilesNameList.size() + 1;
+   }
+
+   @Override
+   public int getMessageIndex() throws RemoteException {
+      return getCurrentMessageIndex();
+   }
+
+   @Override
+   public Message receiveChat(int messageIndex) throws RemoteException {
+
+      System.out.println("Recebido requisição da mensagem " + messageIndex + ".");
+
+      int messageIndexInSavedFilesNameList = messageIndex - 1;
+
+      if (messageIndexInSavedFilesNameList >= 0 && messageIndexInSavedFilesNameList < savedFilesNameList.size()) {
+
+         String fileName = savedFilesNameList.get(messageIndexInSavedFilesNameList);
+         FileManager fileManager = new FileManager();
+         System.out.println("Retornada mensagem " + messageIndex + ": " + fileName + ".");
+         return fileManager.readMessageIn(fileName);
+
+      } else {
+
+         System.out.println("ID da mensagem inválido.");
+         return null;
+
+      }
+
    }
 }

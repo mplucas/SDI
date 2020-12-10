@@ -1,10 +1,16 @@
-######## Teste local
+######## Teste local ########
 
 na pasta raiz:
 > make clean; make;
 
-na pasta bin
+na pasta bin/server
 > java Server
 
-em outro terminal, na pasta bin
-> java Client localhost
+em outro terminal, na pasta bin/lucas
+> java Client localhost lucas
+
+em outro terminal, na pasta bin/pedro
+> java Client localhost pedro
+
+em outro terminal, na pasta bin/joao
+> java Client localhost joao

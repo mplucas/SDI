@@ -1,6 +1,7 @@
 
 /** Client.java **/
 import java.io.File;
+import java.rmi.RemoteException;
 import java.rmi.registry.*;
 
 public class Client {
@@ -13,10 +14,15 @@ public class Client {
    private static String nickName;
    private static int clientID;
 
-   private static int messageIndex = 1;
+   private static int sendMessageIndex = 1;
+   private static int receiveMessageIndex = 1;
 
-   public static void incrementMessageIndex() {
-      Client.messageIndex++;
+   public static void incrementSendMessageIndex() {
+      Client.sendMessageIndex++;
+   }
+
+   public static void incrementReceiveMessageIndex() {
+      Client.receiveMessageIndex++;
    }
 
    public static void main(String[] args) {
@@ -112,7 +118,7 @@ public class Client {
 
       try {
 
-         String strMessageIndex = "0" + messageIndex;
+         String strMessageIndex = "0" + sendMessageIndex;
          strMessageIndex = strMessageIndex.substring(strMessageIndex.length() - 2, strMessageIndex.length());
 
          String fileName = nickName + "-" + strMessageIndex + ".chat";
@@ -125,9 +131,9 @@ public class Client {
             Message message = new Message();
             message = fileManager.readMessageIn(fileName);
 
-            stub.sendchat(message);
+            stub.sendChat(message);
 
-            incrementMessageIndex();
+            incrementSendMessageIndex();
 
             System.out.println("Arquivo " + fileName + " enviado com sucesso.");
 
@@ -148,7 +154,50 @@ public class Client {
 
    }
 
-   private static void poll() {
+   private static void poll() throws Exception {
+
+      try {
+
+         System.out.println("Verificando se há novas mensagens no server (poll).");
+         int serverMessageIndex = stub.getMessageIndex();
+
+         if (serverMessageIndex <= receiveMessageIndex) {
+            System.out.println("Nenhuma mensagem nova no server.");
+         }
+
+         while (receiveMessageIndex < serverMessageIndex) {
+
+            System.out.println("Encontrado mensagem " + receiveMessageIndex + ". Realizando requisição.");
+
+            Message message = stub.receiveChat(receiveMessageIndex);
+
+            if (message.getNickName().equals(nickName)) {
+
+               System.out
+                     .println("Mensagem " + receiveMessageIndex + " é uma mensagem enviada por você. Não será salva.");
+
+            } else {
+
+               String strMessageIndex = "0" + receiveMessageIndex;
+               strMessageIndex = strMessageIndex.substring(strMessageIndex.length() - 2, strMessageIndex.length());
+               String strClientID = "0" + clientID;
+               strClientID = strClientID.substring(strClientID.length() - 2, strClientID.length());
+
+               String fileName = nickName + "-" + strMessageIndex + ".client" + strClientID;
+
+               FileManager fileManager = new FileManager();
+               fileManager.writeContentInFile(message.getContent(), fileName);
+
+               System.out.println("Salva mensagem " + receiveMessageIndex + " em " + fileName + ".");
+            }
+
+            incrementReceiveMessageIndex();
+
+         }
+
+      } catch (Exception ex) {
+         throw ex;
+      }
 
    }
 }
