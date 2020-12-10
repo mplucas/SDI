@@ -8,11 +8,13 @@ import java.rmi.registry.*;
 
 public class Server implements Chat {
 
-   private ArrayList<String> nicknameList;
+   private ArrayList<String> nickNameList;
+   private ArrayList<String> savedFilesNameList;
 
    public Server() {
 
-      nicknameList = new ArrayList<String>();
+      nickNameList = new ArrayList<String>();
+      savedFilesNameList = new ArrayList<String>();
 
    }
 
@@ -41,24 +43,47 @@ public class Server implements Chat {
    }
 
    @Override
-   public int connect(String nickname) throws RemoteException {
+   public int connect(String nickName) throws RemoteException {
 
-      System.out.println(nickname + " solicitou conexâo.");
+      System.out.println(nickName + " solicitou conexâo.");
 
-      if (!nicknameList.contains(nickname)) {
+      if (!nickNameList.contains(nickName)) {
 
-         nicknameList.add(nickname);
-         int newClientID = nicknameList.size();
+         nickNameList.add(nickName);
+         int newClientID = nickNameList.size();
 
-         System.out.println(nickname + " registrado com id " + newClientID + ".");
+         System.out.println(nickName + " registrado com id " + newClientID + ".");
 
          return newClientID;
-      
+
       } else {
 
-         System.out.println(nickname + " recusado pois já existe cliente conectado com mesmo id.");
-         
+         System.out.println(nickName + " recusado pois já existe cliente conectado com mesmo id.");
+
          return -1;
       }
+   }
+
+   @Override
+   public void sendchat(Message message) throws RemoteException {
+
+      System.out.println("Recebido mensagem de " + message.getNickName() + ".");
+
+      String strMessageIndex = "0" + getCurrentMessageIndex();
+      strMessageIndex = strMessageIndex.substring(strMessageIndex.length() - 2, strMessageIndex.length());
+
+      String fileName = message.getNickName() + "-" + strMessageIndex + ".serv";
+
+      FileManager fileManager = new FileManager();
+      fileManager.writeContentInFile(message.getContent(), fileName);
+
+      savedFilesNameList.add(fileName);
+
+      System.out.println("Mensagem salva em " + fileName + ".");
+
+   }
+
+   private int getCurrentMessageIndex() {
+      return savedFilesNameList.size() + 1;
    }
 }

@@ -1,15 +1,23 @@
 
 /** Client.java **/
+import java.io.File;
 import java.rmi.registry.*;
 
 public class Client {
 
    private static int NULL_CLIENT_ID = -1;
+   private static int FIVE_SECONDS = 5000;
 
    private static Chat stub;
    private static String host;
-   private static String nickname;
+   private static String nickName;
    private static int clientID;
+
+   private static int messageIndex = 1;
+
+   public static void incrementMessageIndex() {
+      Client.messageIndex++;
+   }
 
    public static void main(String[] args) {
 
@@ -34,10 +42,18 @@ public class Client {
 
             System.out.println("Conectado no servidor com o id: " + clientID + ".");
 
+            while (true) {
+
+               trySendFile();
+
+               poll();
+
+               Thread.sleep(FIVE_SECONDS);
+
+            }
+
          } else {
-
-            System.out.println("Não conectou no servidor porque já existe um cliente com mesmo nickname: " + nickname);
-
+            System.out.println("Não conectou no servidor porque já existe um cliente com mesmo nickname: " + nickName);
          }
 
       } catch (Exception ex) {
@@ -51,7 +67,7 @@ public class Client {
 
          validateArgs(args);
          host = args[0];
-         nickname = args[1];
+         nickName = args[1];
 
       } catch (Exception ex) {
          throw ex;
@@ -82,7 +98,7 @@ public class Client {
    private static void connectToServer() throws Exception {
 
       try {
-         clientID = stub.connect(nickname);
+         clientID = stub.connect(nickName);
       } catch (Exception ex) {
          throw ex;
       }
@@ -90,5 +106,49 @@ public class Client {
 
    private static boolean isConnectedToServer() {
       return clientID != NULL_CLIENT_ID;
+   }
+
+   private static void trySendFile() throws Exception {
+
+      try {
+
+         String strMessageIndex = "0" + messageIndex;
+         strMessageIndex = strMessageIndex.substring(strMessageIndex.length() - 2, strMessageIndex.length());
+
+         String fileName = nickName + "-" + strMessageIndex + ".chat";
+
+         System.out.println("Verificando se existe o arquivo " + fileName + " para ser enviado.");
+         if (fileExistsWith(fileName)) {
+
+            FileManager fileManager = new FileManager();
+
+            Message message = new Message();
+            message = fileManager.readMessageIn(fileName);
+
+            stub.sendchat(message);
+
+            incrementMessageIndex();
+
+            System.out.println("Arquivo " + fileName + " enviado com sucesso.");
+
+         } else {
+            System.out.println("Arquivo " + fileName + " não encontrado.");
+         }
+
+      } catch (Exception ex) {
+         throw ex;
+      }
+
+   }
+
+   private static boolean fileExistsWith(String fileName) {
+
+      File f = new File(fileName);
+      return f.exists() && !f.isDirectory();
+
+   }
+
+   private static void poll() {
+
    }
 }

@@ -6,5 +6,7 @@ public interface Chat extends Remote {
 
    public String hello() throws RemoteException;
 
-   public int connect(String nickname) throws RemoteException;
+   public int connect(String nickName) throws RemoteException;
+
+   public void sendchat(Message message) throws RemoteException;
 }
