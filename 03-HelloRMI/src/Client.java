@@ -118,27 +118,36 @@ public class Client {
 
       try {
 
-         String strMessageIndex = "0" + sendMessageIndex;
-         strMessageIndex = strMessageIndex.substring(strMessageIndex.length() - 2, strMessageIndex.length());
+         boolean hasMessagesToSend = true;
+         
+         while (hasMessagesToSend) {
 
-         String fileName = nickName + "-" + strMessageIndex + ".chat";
+            String strMessageIndex = "0" + sendMessageIndex;
+            strMessageIndex = strMessageIndex.substring(strMessageIndex.length() - 2, strMessageIndex.length());
+   
+            String fileName = nickName + "-" + strMessageIndex + ".chat";
 
-         System.out.println("Verificando se existe o arquivo " + fileName + " para ser enviado.");
-         if (fileExistsWith(fileName)) {
+            System.out.println("Verificando se existe o arquivo " + fileName + " para ser enviado.");
 
-            FileManager fileManager = new FileManager();
+            if (fileExistsWith(fileName)) {
 
-            Message message = new Message();
-            message = fileManager.readMessageIn(fileName);
+               FileManager fileManager = new FileManager();
 
-            stub.sendChat(message);
+               Message message = new Message();
+               message = fileManager.readMessageIn(fileName);
 
-            incrementSendMessageIndex();
+               stub.sendChat(message);
 
-            System.out.println("Arquivo " + fileName + " enviado com sucesso.");
+               incrementSendMessageIndex();
 
-         } else {
-            System.out.println("Arquivo " + fileName + " não encontrado.");
+               System.out.println("Arquivo " + fileName + " enviado com sucesso.");
+
+            } else {
+
+               System.out.println("Arquivo " + fileName + " não encontrado.");
+               hasMessagesToSend = false;
+
+            }
          }
 
       } catch (Exception ex) {
@@ -177,6 +186,8 @@ public class Client {
                      .println("Mensagem " + receiveMessageIndex + " é uma mensagem enviada por você. Não será salva.");
 
             } else {
+
+               System.out.println(message.getNickName() + " enviou:\n" + message.getContent() + "\n");
 
                String strMessageIndex = "0" + receiveMessageIndex;
                strMessageIndex = strMessageIndex.substring(strMessageIndex.length() - 2, strMessageIndex.length());

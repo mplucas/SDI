@@ -1,16 +1,38 @@
+######## Teste do professor (Moodle) ########
+
+na pasta raiz:
+> make clean; make;
+
+na pasta lucas_meneghelli/server
+> java Server
+
+em outro terminal, na pasta lucas_meneghelli/paul
+> java Client localhost paul
+
+em outro terminal, na pasta lucas_meneghelli/john
+> java Client localhost john
+
+em outro terminal, na pasta lucas_meneghelli/mary
+> java Client localhost mary
+
 ######## Teste local ########
 
 na pasta raiz:
 > make clean; make;
 
-na pasta bin/server
+na pasta localtest/server
 > java Server
 
-em outro terminal, na pasta bin/lucas
+em outro terminal, na pasta localtest/lucas
 > java Client localhost lucas
 
-em outro terminal, na pasta bin/pedro
+em outro terminal, na pasta localtest/pedro
 > java Client localhost pedro
 
-em outro terminal, na pasta bin/joao
+em outro terminal, na pasta localtest/joao
 > java Client localhost joao
+
+OBSERVAÇÕES:
+- segundo o professor, é obrigatório o print da mensagem recebidas no cliente. Por isso, as mensagens utilizadas (de 1M) podem floodar a tela. No entanto, apenas
+foi seguido a metodologia do trabalho pedida pelo professor. Caso se deseje verificar melhor a solução sem o flood, comentar o System.out.println da linha 190 do
+arquivo Client.java e rodar na pasta raiz novamente make clean; make.
