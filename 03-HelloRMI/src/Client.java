@@ -1,7 +1,6 @@
 
 /** Client.java **/
 import java.io.File;
-import java.rmi.RemoteException;
 import java.rmi.registry.*;
 
 public class Client {

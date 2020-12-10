@@ -1,5 +1,3 @@
-all: localtest lucas_meneghelli
-
 localtest:
 	- mkdir localtest
 	- mkdir localtest/server
@@ -18,16 +16,14 @@ localtest:
 lucas_meneghelli:
 	- mkdir lucas_meneghelli
 	- mkdir lucas_meneghelli/server
-	- javac src/Message.java src/FileManager.java src/Chat.java src/Server.java -d lucas_meneghelli/server
+	- /usr/local/jdk1.8.0_131/bin/javac src/Message.java src/FileManager.java src/Chat.java src/Server.java -d lucas_meneghelli/server
 	- mkdir lucas_meneghelli/paul
-	- javac src/Message.java src/FileManager.java src/Chat.java src/Client.java -d lucas_meneghelli/paul
+	- /usr/local/jdk1.8.0_131/bin/javac src/Message.java src/FileManager.java src/Chat.java src/Client.java -d lucas_meneghelli/paul
 	- base64 /dev/urandom | head -c 1M > lucas_meneghelli/paul/paul-01.chat
 	- mkdir lucas_meneghelli/john
-	- javac src/Message.java src/FileManager.java src/Chat.java src/Client.java -d lucas_meneghelli/john
-	- base64 /dev/urandom | head -c 1M > lucas_meneghelli/john/john-01.chat
+	- /usr/local/jdk1.8.0_131/bin/javac src/Message.java src/FileManager.java src/Chat.java src/Client.java -d lucas_meneghelli/john
 	- mkdir lucas_meneghelli/mary
-	- javac src/Message.java src/FileManager.java src/Chat.java src/Client.java -d lucas_meneghelli/mary
-	- base64 /dev/urandom | head -c 1M > lucas_meneghelli/mary/mary-01.chat
+	- /usr/local/jdk1.8.0_131/bin/javac src/Message.java src/FileManager.java src/Chat.java src/Client.java -d lucas_meneghelli/mary
 
 .PHONY: clean
 

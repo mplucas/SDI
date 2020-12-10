@@ -1,24 +1,25 @@
 ######## Teste do professor (Moodle) ########
 
-na pasta raiz:
-> make clean; make;
+enviar a pasta raiz para a maquina:
+> scp -r lucas_meneghelli_rmi ens1:/home/alu2020s2/
+na pasta lucas_meneghelli_rmi:
+> make clean; make lucas_meneghelli;
 
-na pasta lucas_meneghelli/server
+agora acessando por ssh as maquinas:
+na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli_rmi/lucas_meneghelli/server
 > java Server
-
-em outro terminal, na pasta lucas_meneghelli/paul
+em outro terminal, na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli_rmi/lucas_meneghelli/paul
 > java Client localhost paul
-
-em outro terminal, na pasta lucas_meneghelli/john
+em outro terminal, na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli_rmi/lucas_meneghelli/john
 > java Client localhost john
-
-em outro terminal, na pasta lucas_meneghelli/mary
+em outro terminal, na maquina ens2, acessar /home/alu2020s2/lucas_meneghelli_rmi/lucas_meneghelli/mary
 > java Client localhost mary
+
 
 ######## Teste local ########
 
 na pasta raiz:
-> make clean; make;
+> make clean; make localtest;
 
 na pasta localtest/server
 > java Server
