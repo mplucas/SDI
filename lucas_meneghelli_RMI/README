@@ -1,19 +1,19 @@
 ######## Teste do professor (Moodle) ########
 
 enviar a pasta raiz para a maquina:
-> scp -r lucas_meneghelli_rmi ens1:/home/alu2020s2/
-na pasta lucas_meneghelli_rmi:
+> scp -r lucas_meneghelli_RMI ens1:/home/alu2020s2/
+na pasta lucas_meneghelli_RMI:
 > make clean; make lucas_meneghelli;
 
 agora acessando por ssh as maquinas:
-na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli_rmi/lucas_meneghelli/server
-> java Server
-em outro terminal, na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli_rmi/lucas_meneghelli/paul
-> java Client localhost paul
-em outro terminal, na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli_rmi/lucas_meneghelli/john
-> java Client localhost john
-em outro terminal, na maquina ens2, acessar /home/alu2020s2/lucas_meneghelli_rmi/lucas_meneghelli/mary
-> java Client localhost mary
+na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli_RMI/lucas_meneghelli/server
+> /usr/local/jdk1.8.0_131/bin/java Server
+em outro terminal, na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli_RMI/lucas_meneghelli/paul
+> /usr/local/jdk1.8.0_131/bin/java Client localhost paul
+em outro terminal, na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli_RMI/lucas_meneghelli/john
+> /usr/local/jdk1.8.0_131/bin/java Client localhost john
+em outro terminal, na maquina ens2, acessar /home/alu2020s2/lucas_meneghelli_RMI/lucas_meneghelli/mary
+> /usr/local/jdk1.8.0_131/bin/java Client localhost mary
 
 
 ######## Teste local ########
