@@ -15,6 +15,7 @@ na past raiz (lucas_meneghelli_RMI):
 > java Server <host>
     * Onde <host> é o host em que o server se encontra.
      IMPORTANTE: para acessar esse server por um cliente de outra máquina, informe o ip, nao simplesmente 'localhost'. Ex: java Server 10.20.221.230.
+     se quiser verificar o ip atual pode-se utilizar o comando ip addr show.
 
 - Para executar o client é necessário que o arquivo gerado Client.class esteja no mesmo diretorio que os arquivos gerados:
     - Message.class
