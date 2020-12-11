@@ -1,4 +1,7 @@
-all: localtest lucas_meneghelli
+all: basic
+
+basic:
+	- javac src/Message.java src/FileManager.java src/Chat.java src/Server.java src/Client.java -d .
 
 localtest:
 	- mkdir localtest
@@ -32,3 +35,4 @@ lucas_meneghelli:
 clean:
 	-rm localtest -r
 	-rm lucas_meneghelli -r
+	-rm *.class

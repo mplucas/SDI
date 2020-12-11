@@ -44,7 +44,7 @@ public class Server implements Chat {
 
       if (args.length != 1) {
          throw new Exception(
-               "Argumentos de chamada errados. Tente: java Server <host> (para ambientes não locais, informe o ip, nao simplesmente 'localhost')");
+               "Argumentos de chamada errados. Tente: java Server <host> (IMPORTANTE: para acessar esse server por um cliente de outra máquina, informe o ip, nao simplesmente 'localhost'. Ex: java Server 10.20.221.230.)");
       }
    }
 
