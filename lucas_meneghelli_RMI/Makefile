@@ -1,3 +1,5 @@
+all: localtest lucas_meneghelli
+
 localtest:
 	- mkdir localtest
 	- mkdir localtest/server

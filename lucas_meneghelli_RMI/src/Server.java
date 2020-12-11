@@ -21,6 +21,10 @@ public class Server implements Chat {
    public static void main(String[] args) {
 
       try {
+
+         validateArgs(args);
+
+         System.setProperty("java.rmi.server.hostname", args[0]);
          // Instancia o objeto servidor e a sua stub
          Server server = new Server();
          Chat stub = (Chat) UnicastRemoteObject.exportObject(server, 0);
@@ -33,6 +37,14 @@ public class Server implements Chat {
 
       } catch (Exception ex) {
          ex.printStackTrace();
+      }
+   }
+
+   private static void validateArgs(String[] args) throws Exception {
+
+      if (args.length != 1) {
+         throw new Exception(
+               "Argumentos de chamada errados. Tente: java Server <host> (para ambientes não locais, informe o ip, nao simplesmente 'localhost')");
       }
    }
 

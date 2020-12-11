@@ -1,28 +1,31 @@
 ######## Teste do professor (Moodle) ########
 
-enviar a pasta raiz para a maquina:
+enviar a pasta raiz (lucas_meneghelli_RMI) para a maquina:
 > scp -r lucas_meneghelli_RMI ens1:/home/alu2020s2/
 na pasta lucas_meneghelli_RMI:
 > make clean; make lucas_meneghelli;
 
 agora acessando por ssh as maquinas:
 na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli_RMI/lucas_meneghelli/server
-> /usr/local/jdk1.8.0_131/bin/java Server
+> /usr/local/jdk1.8.0_131/bin/java Server 10.20.221.230
+
 em outro terminal, na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli_RMI/lucas_meneghelli/paul
 > /usr/local/jdk1.8.0_131/bin/java Client localhost paul
+
 em outro terminal, na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli_RMI/lucas_meneghelli/john
 > /usr/local/jdk1.8.0_131/bin/java Client localhost john
+
 em outro terminal, na maquina ens2, acessar /home/alu2020s2/lucas_meneghelli_RMI/lucas_meneghelli/mary
-> /usr/local/jdk1.8.0_131/bin/java Client localhost mary
+> /usr/local/jdk1.8.0_131/bin/java Client ens1 mary
 
 
 ######## Teste local ########
 
-na pasta raiz:
+na pasta raiz (lucas_meneghelli_RMI):
 > make clean; make localtest;
 
 na pasta localtest/server
-> java Server
+> java Server localhost
 
 em outro terminal, na pasta localtest/lucas
 > java Client localhost lucas
@@ -35,5 +38,5 @@ em outro terminal, na pasta localtest/joao
 
 OBSERVAÇÕES:
 - segundo o professor, é obrigatório o print da mensagem recebidas no cliente. Por isso, as mensagens utilizadas (de 1M) podem floodar a tela. No entanto, apenas
-foi seguido a metodologia do trabalho pedida pelo professor. Caso se deseje verificar melhor a solução sem o flood, comentar o System.out.println da linha 190 do
+foi seguido a metodologia do trabalho pedida pelo professor. Caso se deseje verificar melhor a solução sem o flood, comentar o System.out.println da linha 189 do
 arquivo Client.java e rodar na pasta raiz novamente make clean; make.

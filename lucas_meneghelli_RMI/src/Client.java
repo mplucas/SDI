@@ -118,12 +118,12 @@ public class Client {
       try {
 
          boolean hasMessagesToSend = true;
-         
+
          while (hasMessagesToSend) {
 
             String strMessageIndex = "0" + sendMessageIndex;
             strMessageIndex = strMessageIndex.substring(strMessageIndex.length() - 2, strMessageIndex.length());
-   
+
             String fileName = nickName + "-" + strMessageIndex + ".chat";
 
             System.out.println("Verificando se existe o arquivo " + fileName + " para ser enviado.");
