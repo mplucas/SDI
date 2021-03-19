@@ -4,7 +4,7 @@ require 'json'
 
 if ARGV.length != 1
 
-    puts "Utilização errada do arquivo, execute da seguinte maneira: ruby send.rb <nickname>"
+    puts "Utilização errada do arquivo, execute da seguinte maneira: ruby client.rb <nickname>"
     exit(0)
 
 end
