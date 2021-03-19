@@ -23,7 +23,9 @@ begin
   end
 
 rescue Interrupt => _
+
   connection.close
 
   exit(0)
+  
 end

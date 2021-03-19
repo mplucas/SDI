@@ -8,9 +8,23 @@ connection.start
 channel = connection.create_channel
 queue = channel.queue('hello')
 
-message = {:nickname => 'lucas', :content => 'Hello World!'}
+begin
 
-channel.default_exchange.publish(message.to_json, routing_key: queue.name)
-puts " [x] Sent 'Hello World!'"
+    while true
 
-connection.close
+        message = {:nickname => 'lucas', :content => 'Hello World!'}
+
+        channel.default_exchange.publish(message.to_json, routing_key: queue.name)
+        puts " [x] Sent 'Hello World!'"
+
+    end
+
+rescue Interrupt => _
+
+    connection.close
+    
+    puts "Rescued"
+
+    exit(0)
+    
+end
