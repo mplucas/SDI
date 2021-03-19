@@ -25,11 +25,12 @@ class ChatClient
     end
     
     def stop
+        unlockNickname
         channel.close
         connection.close
     end
 
-    def send(message)
+    def send(message, hasToLock=true)
 
         @call_id = generate_uuid
 
@@ -39,10 +40,30 @@ class ChatClient
             reply_to: reply_queue.name
         )
 
-        # wait for the signal to continue the execution
-        lock.synchronize { condition.wait(lock) }
+        if hasToLock
+            # wait for the signal to continue the execution
+            lock.synchronize { condition.wait(lock) }
 
-        response
+            return response
+        end
+
+        return 0
+
+    end
+
+    def requestNicknameAuthorization
+    
+        message = {:type => 'nicknameAuth', :nickname => nickname}
+
+        puts " [x] Requisitando uso do nickname #{nickname} para o Server"
+        result = send(message)
+
+        if result == 'OK'
+            puts "Nickname autorizado"
+        else
+            puts "Nickname já utilizado. Abortando."
+            exit()
+        end
 
     end
     
@@ -120,6 +141,15 @@ class ChatClient
         "#{rand}#{rand}#{rand}"
     end
 
+    def unlockNickname
+    
+        message = {:type => 'unlockNickname', :nickname => nickname}
+
+        puts " [x] Liberado nickname #{nickname} no Server"
+        result = send(message, false)
+    
+    end
+
 end
 
 if ARGV.length != 1
@@ -135,7 +165,9 @@ begin
     
     client = ChatClient.new('sdi_lucas', nickname)
 
-    client.stardSendAndReceive    
+    client.requestNicknameAuthorization
+    
+    client.stardSendAndReceive
 
 rescue Interrupt => _
 

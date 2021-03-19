@@ -9,6 +9,7 @@ class ChatServer
     def initialize
 
         @receiveID = 1
+        @usedNicknames = []
         
         @connection = Bunny.new(automatically_recover: false)
         @connection.start
@@ -35,7 +36,7 @@ class ChatServer
 
     private
 
-    attr_reader :channel, :exchange, :queue, :connection
+    attr_reader :channel, :exchange, :queue, :connection, :usedNicknames
 
     def subscribe_to_queue
 
@@ -58,11 +59,19 @@ class ChatServer
 
         message = JSON.parse(payload)
 
-        if message['type'] == 'message'
+        if message['type'] == 'nicknameAuth'
+
+            return nicknameCanBeUsed(message['nickname'])
+
+        elsif message['type'] == 'message'
 
             saveInFile(message)
 
             return 'OK'
+
+        elsif message['type'] == 'unlockNickname'
+
+            unlockNickname(message['nickname'])
 
         else
 
@@ -70,6 +79,23 @@ class ChatServer
 
             return 'NOK'
 
+        end
+
+    end
+
+    def nicknameCanBeUsed(nickname)
+
+        puts " [x] Requisitada utilização do nickname #{nickname}"
+
+        if !usedNicknames.include?(nickname)
+            
+            puts "Autorizado"
+            usedNicknames.push(nickname)
+            return 'OK'
+
+        else
+            puts "Não autorizado"
+            return 'NOK'
         end
 
     end
@@ -87,6 +113,13 @@ class ChatServer
 
         @receiveID = receiveID + 1
 
+    end
+
+    def unlockNickname(nickname)
+        
+        if usedNicknames.delete(nickname) != nil
+            puts " [x] Liberado nickname #{nickname}"
+        end
     end
 
 end
