@@ -2,23 +2,33 @@
 require 'bunny'
 require 'json'
 
+if ARGV.length != 1
+
+    puts "Utilização errada do arquivo, execute da seguinte maneira: ruby send.rb <nickname>"
+    exit(0)
+
+end
+
+nickname = ARGV[0]
+
+sendID = 1
+
 connection = Bunny.new(automatically_recover: false)
 connection.start
 
 channel = connection.create_channel
 queue = channel.queue('sdi_lucas')
 
-sendID = 0
-
 begin
 
     while true
 
-        puts "Verificando se o arquivo '#{sendID}' existe..."
+        fileName = nickname + '-' + sendID.to_s.rjust(2, '0') + '.chat'
+        puts "Verificando se o arquivo '#{fileName}' existe..."
 
-        if File.exists?(sendID.to_s)
+        if File.exists?(fileName)
 
-            file = File.open(sendID.to_s)
+            file = File.open(fileName)
 
             file_data = file.read
 
@@ -33,7 +43,7 @@ begin
 
         elsif
 
-            puts "Arquivo #{sendID} não existe, verificando novamente em 5 segundos..."
+            puts "Arquivo #{fileName} não existe, verificando novamente em 5 segundos..."
 
         end
 
