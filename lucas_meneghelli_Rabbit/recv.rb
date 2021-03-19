@@ -8,6 +8,8 @@ connection.start
 channel = connection.create_channel
 queue = channel.queue('sdi_lucas')
 
+receiveID = 1
+
 begin
   
   puts ' [*] Esperando mensagens. Para sair use CTRL+C'
@@ -17,6 +19,15 @@ begin
     message = JSON.parse(body)
 
     puts " [x] Recebida mensagem de #{message['nickname']}: #{message['content']}"
+
+    fileName = message['nickname'] + '-' + receiveID.to_s.rjust(2, '0') + '.serv'
+    file = File.open(fileName, 'w')
+    file.write(message['content'])
+    file.close
+
+    puts "Mensagem salva em #{fileName}"
+
+    receiveID = receiveID + 1
 
   end
 
