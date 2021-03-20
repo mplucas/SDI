@@ -18,17 +18,17 @@ localtest:
 	- cp src/client.rb localtest/joao
 	- base64 /dev/urandom | head -c 1M > localtest/joao/joao-01.chat
 
-# lucas_meneghelli:
-# 	- mkdir lucas_meneghelli
-# 	- mkdir lucas_meneghelli/server
-# 	- /usr/local/jdk1.8.0_131/bin/javac src/Message.java src/FileManager.java src/Chat.java src/Server.java -d lucas_meneghelli/server
-# 	- mkdir lucas_meneghelli/paul
-# 	- /usr/local/jdk1.8.0_131/bin/javac src/Message.java src/FileManager.java src/Chat.java src/Client.java -d lucas_meneghelli/paul
-# 	- base64 /dev/urandom | head -c 1M > lucas_meneghelli/paul/paul-01.chat
-# 	- mkdir lucas_meneghelli/john
-# 	- /usr/local/jdk1.8.0_131/bin/javac src/Message.java src/FileManager.java src/Chat.java src/Client.java -d lucas_meneghelli/john
-# 	- mkdir lucas_meneghelli/mary
-# 	- /usr/local/jdk1.8.0_131/bin/javac src/Message.java src/FileManager.java src/Chat.java src/Client.java -d lucas_meneghelli/mary
+lucas_meneghelli:
+	- mkdir lucas_meneghelli
+	- mkdir lucas_meneghelli/server
+	- cp src/server.rb lucas_meneghelli/server
+	- mkdir lucas_meneghelli/paul
+	- cp src/client.rb lucas_meneghelli/paul
+	- base64 /dev/urandom | head -c 1M > lucas_meneghelli/paul/paul-01.chat
+	- mkdir lucas_meneghelli/john
+	- cp src/client.rb lucas_meneghelli/john
+	- mkdir lucas_meneghelli/mary
+	- cp src/client.rb lucas_meneghelli/mary
 
 .PHONY: clean
 
