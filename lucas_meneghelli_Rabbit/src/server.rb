@@ -6,7 +6,9 @@ class ChatServer
 
     attr_accessor :receiveID
 
-    def initialize
+    def initialize(noFlood)
+
+        @noFlood = noFlood
 
         @receiveID = 0
         @usedNicknames = []
@@ -39,7 +41,7 @@ class ChatServer
     private
 
     attr_reader :channel, :exchange, :queue, :connection, :usedNicknames,
-    :currentClientID, :savedFilesNames
+    :currentClientID, :savedFilesNames, :noFlood
 
     def subscribe_to_queue
 
@@ -114,7 +116,8 @@ class ChatServer
 
     def saveInFile(message)
 
-        puts " [x] Recebida mensagem de #{message['nickname']}: #{message['content']}"
+        notification = " [x] Recebida mensagem de #{message['nickname']}" + (noFlood ? "" : ": #{message['content']}")
+        puts notification
 
         fileName = message['nickname'] + '-' + (receiveID + 1).to_s.rjust(2, '0') + '.serv'
         file = File.open(fileName, 'w')
@@ -153,9 +156,18 @@ class ChatServer
 
 end
 
+if ARGV.length > 1 or (ARGV.length == 1 and ARGV[0] != "--no-flood")
+
+    puts "Utilização errada do arquivo, execute da seguinte maneira: ruby server.rb [--no-flood]"
+    exit(0)
+
+end
+
+noFlood = ARGV.length == 1 ? true : false
+
 begin
 
-    server = ChatServer.new
+    server = ChatServer.new(noFlood)
 
     puts ' [*] Esperando mensagens. Para sair use CTRL+C'
     server.start('sdi_lucas')
