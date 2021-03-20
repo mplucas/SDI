@@ -6,12 +6,14 @@ class ChatClient
 
     attr_accessor :call_id, :response, :lock, :condition, :connection,
     :channel, :server_queue_name, :reply_queue, :exchange, :nickname,
-    :sendID
+    :sendID, :receiveID
 
     def initialize(server_queue_name, nickname)
 
         @nickname = nickname
+        @clientID = -1
         @sendID = 1
+        @receiveID = 1
 
         @connection = Bunny.new(automatically_recover: false)
         @connection.start
@@ -58,11 +60,12 @@ class ChatClient
         puts " [x] Requisitando uso do nickname #{nickname} para o Server"
         result = send(message)
 
-        if result == 'OK'
-            puts "Nickname autorizado"
-        else
+        if result != 'NOK'
             puts "Nickname já utilizado. Abortando."
-            exit()
+            exit(0)
+        else
+            puts "Nickname autorizado"
+            @clientID = result
         end
 
     end
@@ -72,12 +75,15 @@ class ChatClient
         while true
 
             sendMessage
+            pollMessages
     
             sleep(5)
     
         end
 
     end
+
+    private
 
     def sendMessage
     
@@ -91,7 +97,6 @@ class ChatClient
             file.close
             
             message = {:type => 'message', :nickname => nickname, :content => file_data}
-
             puts " [x] Enviada mensagem #{message} para o Server"
             result = send(message)
 
@@ -113,7 +118,46 @@ class ChatClient
 
     end
 
-    private
+    def pollMessages
+    
+        serverMessageID = requestServerMessageID
+
+        while receiveID <= serverMessageID
+        
+            message = requestMessageFromServer(receiveID)
+
+            if message['nickname'] != nickname
+
+                fileName = nickname + '-' + receiveID.to_s.rjust(2, '0') + '.client' + clientID.to_s.rjust(2, '0')
+                file = File.open(fileName, 'w')
+                file.write(file_data)
+                file.close
+
+            else
+                puts "Mensagem #{receiveID} é sua, não salvando."
+            end
+
+            @receiveID = receiveID + 1
+        
+        end
+    
+    end
+
+    def requestServerMessageID
+    
+        message = {:type => 'requestMessageID'}
+        result = send(message)
+        return result
+    
+    end
+
+    def requestMessageFromServer(messageID)
+
+        message = {:type => 'requestMessage', :messageID => messageID}
+        result = send(message)
+        return result
+
+    end
 
     def setup_reply_queue
 
@@ -144,7 +188,6 @@ class ChatClient
     def unlockNickname
     
         message = {:type => 'unlockNickname', :nickname => nickname}
-
         puts " [x] Liberado nickname #{nickname} no Server"
         result = send(message, false)
     

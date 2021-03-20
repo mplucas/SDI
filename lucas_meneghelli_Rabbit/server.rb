@@ -10,6 +10,8 @@ class ChatServer
 
         @receiveID = 1
         @usedNicknames = []
+        @savedFilesNames = []
+        @currentClientID = 1
         
         @connection = Bunny.new(automatically_recover: false)
         @connection.start
@@ -37,6 +39,7 @@ class ChatServer
     private
 
     attr_reader :channel, :exchange, :queue, :connection, :usedNicknames
+    :currentClientID
 
     def subscribe_to_queue
 
@@ -66,9 +69,16 @@ class ChatServer
         elsif message['type'] == 'message'
 
             saveInFile(message)
-
             return 'OK'
 
+        elsif message['type'] == 'requestMessageID'
+
+            return receiveID
+        
+        elsif message['type'] == 'requestMessage'
+
+            return readMessageWith(mensage['messageID'])
+        
         elsif message['type'] == 'unlockNickname'
 
             unlockNickname(message['nickname'])
@@ -76,7 +86,6 @@ class ChatServer
         else
 
             puts "Recebida mensagem com type não reconhecido. type: #{message['type']}"
-
             return 'NOK'
 
         end
@@ -91,7 +100,10 @@ class ChatServer
             
             puts "Autorizado"
             usedNicknames.push(nickname)
-            return 'OK'
+
+            clientID = currentClientID
+            @currentClientID = currentClientID + 1
+            return clientID
 
         else
             puts "Não autorizado"
@@ -111,7 +123,24 @@ class ChatServer
 
         puts "Mensagem salva em #{fileName}"
 
+        savedFilesNames.push(fileName)
+
         @receiveID = receiveID + 1
+
+    end
+
+    def readMessageWith(messageID)
+
+        arrayIndex = messageID - 1
+
+        file = File.open(savedFilesNames[arrayIndex])
+        file_data = file.read
+        file.close
+
+        nickname = savedFilesNames[arrayIndex][0..(savedFilesNames[arrayIndex].index('-') - 1)]
+        message = {:nickname => nickname, :content => file_data}
+
+        return message
 
     end
 
