@@ -6,8 +6,9 @@ class ChatServer
 
     attr_accessor :receiveID
 
-    def initialize(noFlood)
+    def initialize(host, noFlood)
 
+        @host = host
         @noFlood = noFlood
 
         @receiveID = 0
@@ -15,7 +16,7 @@ class ChatServer
         @savedFilesNames = []
         @currentClientID = 1
         
-        @connection = Bunny.new(automatically_recover: false)
+        @connection = Bunny.new(automatically_recover: false, :host => host)
         @connection.start
         @channel = @connection.create_channel
 
@@ -156,18 +157,19 @@ class ChatServer
 
 end
 
-if ARGV.length > 1 or (ARGV.length == 1 and ARGV[0] != "--no-flood")
+if ARGV.length < 1 or ARGV.length > 2 or (ARGV.length == 2 and ARGV[1] != "--no-flood")
 
-    puts "Utilização errada do arquivo, execute da seguinte maneira: ruby server.rb [--no-flood]"
+    puts "Utilização errada do arquivo, execute da seguinte maneira: ruby server.rb <host> [--no-flood]"
     exit(0)
 
 end
 
-noFlood = ARGV.length == 1 ? true : false
+host = ARGV[0]
+noFlood = ARGV.length == 2 ? true : false
 
 begin
 
-    server = ChatServer.new(noFlood)
+    server = ChatServer.new(host, noFlood)
 
     puts ' [*] Esperando mensagens. Para sair use CTRL+C'
     server.start('sdi_lucas')

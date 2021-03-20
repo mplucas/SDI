@@ -6,18 +6,19 @@ class ChatClient
 
     attr_accessor :call_id, :response, :lock, :condition, :connection,
     :channel, :server_queue_name, :reply_queue, :exchange, :nickname,
-    :sendID, :receiveID, :clientID, :noFlood
+    :sendID, :receiveID, :clientID, :noFlood, :host
 
-    def initialize(server_queue_name, nickname, noFlood)
+    def initialize(server_queue_name, nickname, host, noFlood)
 
         @nickname = nickname
+        @host = host
         @noFlood = noFlood
 
         @clientID = -1
         @sendID = 0
         @receiveID = 1
 
-        @connection = Bunny.new(automatically_recover: false)
+        @connection = Bunny.new(automatically_recover: false, :host => host)
         @connection.start
 
         @channel = connection.create_channel
@@ -219,19 +220,20 @@ class ChatClient
 
 end
 
-if ARGV.length < 1 or ARGV.length > 2 or (ARGV.length == 2 and ARGV[1] != "--no-flood")
+if ARGV.length < 2 or ARGV.length > 3 or (ARGV.length == 3 and ARGV[2] != "--no-flood")
 
-    puts "Utilização errada do arquivo, execute da seguinte maneira: ruby client.rb <nickname> [--no-flood]"
+    puts "Utilização errada do arquivo, execute da seguinte maneira: ruby client.rb <nickname> <host> [--no-flood]"
     exit(0)
 
 end
 
 nickname = ARGV[0]
-noFlood = ARGV.length == 2 ? true : false
+host = ARGV[1]
+noFlood = ARGV.length == 3 ? true : false
 
 begin
     
-    client = ChatClient.new('sdi_lucas', nickname, noFlood)
+    client = ChatClient.new('sdi_lucas', nickname, host, noFlood)
 
     client.requestNicknameAuthorization
     
