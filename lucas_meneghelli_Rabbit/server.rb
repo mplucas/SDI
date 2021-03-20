@@ -8,7 +8,7 @@ class ChatServer
 
     def initialize
 
-        @receiveID = 1
+        @receiveID = 0
         @usedNicknames = []
         @savedFilesNames = []
         @currentClientID = 1
@@ -38,8 +38,8 @@ class ChatServer
 
     private
 
-    attr_reader :channel, :exchange, :queue, :connection, :usedNicknames
-    :currentClientID
+    attr_reader :channel, :exchange, :queue, :connection, :usedNicknames,
+    :currentClientID, :savedFilesNames
 
     def subscribe_to_queue
 
@@ -77,7 +77,7 @@ class ChatServer
         
         elsif message['type'] == 'requestMessage'
 
-            return readMessageWith(mensage['messageID'])
+            return readMessageWith(message['messageID'])
         
         elsif message['type'] == 'unlockNickname'
 
@@ -116,7 +116,7 @@ class ChatServer
 
         puts " [x] Recebida mensagem de #{message['nickname']}: #{message['content']}"
 
-        fileName = message['nickname'] + '-' + receiveID.to_s.rjust(2, '0') + '.serv'
+        fileName = message['nickname'] + '-' + (receiveID + 1).to_s.rjust(2, '0') + '.serv'
         file = File.open(fileName, 'w')
         file.write(message['content'])
         file.close

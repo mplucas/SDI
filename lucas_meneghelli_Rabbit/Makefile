@@ -35,3 +35,4 @@
 clean:
 	-rm *.chat
 	-rm *.serv
+	-rm *.client*

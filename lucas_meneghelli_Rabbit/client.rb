@@ -6,13 +6,13 @@ class ChatClient
 
     attr_accessor :call_id, :response, :lock, :condition, :connection,
     :channel, :server_queue_name, :reply_queue, :exchange, :nickname,
-    :sendID, :receiveID
+    :sendID, :receiveID, :clientID
 
     def initialize(server_queue_name, nickname)
 
         @nickname = nickname
         @clientID = -1
-        @sendID = 1
+        @sendID = 0
         @receiveID = 1
 
         @connection = Bunny.new(automatically_recover: false)
@@ -60,7 +60,7 @@ class ChatClient
         puts " [x] Requisitando uso do nickname #{nickname} para o Server"
         result = send(message)
 
-        if result != 'NOK'
+        if result == 'NOK'
             puts "Nickname já utilizado. Abortando."
             exit(0)
         else
@@ -70,12 +70,14 @@ class ChatClient
 
     end
     
-    def stardSendAndReceive
+    def startSendAndReceive
 
         while true
 
             sendMessage
             pollMessages
+
+            puts " [*] Envio e polling de mensagens concluidos. Executando novamente em 5 segundos...\n\n"
     
             sleep(5)
     
@@ -87,8 +89,8 @@ class ChatClient
 
     def sendMessage
     
-        fileName = nickname + '-' + sendID.to_s.rjust(2, '0') + '.chat'
-        puts "Verificando se o arquivo '#{fileName}' existe..."
+        fileName = nickname + '-' + (sendID + 1).to_s.rjust(2, '0') + '.chat'
+        puts " [x] Verificando se o arquivo '#{fileName}' existe para o enviar como mensagem ao server"
 
         if File.exists?(fileName)
 
@@ -106,13 +108,13 @@ class ChatClient
 
             else
 
-                puts " [x] Recebida resposta errada #{result}."
+                puts " [x] Recebida resposta errada #{result} do server após envio, tentará enviar novamente a mensagem na próxima checagem"
 
             end
 
         elsif
 
-            puts "Arquivo #{fileName} não existe, verificando novamente em 5 segundos..."
+            puts "Arquivo #{fileName} não existe, não enviando mensagens ao server"
 
         end
 
@@ -120,21 +122,31 @@ class ChatClient
 
     def pollMessages
     
+        puts " [x] Verificando se há novas mensagens no Server"
         serverMessageID = requestServerMessageID
+
+        if receiveID > serverMessageID
+            puts "Nenhuma mensagem nova no Server"
+        end
 
         while receiveID <= serverMessageID
         
+            puts "Requisitando mensagem #{receiveID} do Server"
             message = requestMessageFromServer(receiveID)
 
             if message['nickname'] != nickname
 
+                puts " [x] Recebida mensagem de #{message['nickname']}: #{message['content']}"
+                
                 fileName = nickname + '-' + receiveID.to_s.rjust(2, '0') + '.client' + clientID.to_s.rjust(2, '0')
                 file = File.open(fileName, 'w')
-                file.write(file_data)
+                file.write(message['content'])
                 file.close
+                
+                puts "Mensagem salva em #{fileName}"
 
             else
-                puts "Mensagem #{receiveID} é sua, não salvando."
+                puts "Mensagem #{receiveID} é sua, não salvando"
             end
 
             @receiveID = receiveID + 1
@@ -210,7 +222,7 @@ begin
 
     client.requestNicknameAuthorization
     
-    client.stardSendAndReceive
+    client.startSendAndReceive
 
 rescue Interrupt => _
 
