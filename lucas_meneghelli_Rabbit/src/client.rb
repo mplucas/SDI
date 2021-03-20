@@ -6,11 +6,13 @@ class ChatClient
 
     attr_accessor :call_id, :response, :lock, :condition, :connection,
     :channel, :server_queue_name, :reply_queue, :exchange, :nickname,
-    :sendID, :receiveID, :clientID
+    :sendID, :receiveID, :clientID, :noFlood
 
-    def initialize(server_queue_name, nickname)
+    def initialize(server_queue_name, nickname, noFlood)
 
         @nickname = nickname
+        @noFlood = noFlood
+
         @clientID = -1
         @sendID = 0
         @receiveID = 1
@@ -103,7 +105,8 @@ class ChatClient
                 file.close
                 
                 message = {:type => 'message', :nickname => nickname, :content => file_data}
-                puts " [x] Enviada mensagem #{message} para o Server"
+                notification = " [x] Enviada mensagem para o Server de #{fileName}" + (noFlood ? "" : ": #{message}")
+                puts notification
                 result = send(message)
 
                 if result == 'OK'
@@ -139,12 +142,13 @@ class ChatClient
 
         while receiveID <= serverMessageID
         
-            puts "Requisitando mensagem #{receiveID} do Server"
+            puts " [x] Requisitando mensagem #{receiveID} do Server"
             message = requestMessageFromServer(receiveID)
 
             if message['nickname'] != nickname
 
-                puts " [x] Recebida mensagem de #{message['nickname']}: #{message['content']}"
+                notification = "Recebida mensagem de #{message['nickname']}" + (noFlood ? "" : ": #{message['content']}")
+                puts notification
                 
                 fileName = nickname + '-' + receiveID.to_s.rjust(2, '0') + '.client' + clientID.to_s.rjust(2, '0')
                 file = File.open(fileName, 'w')
@@ -215,18 +219,19 @@ class ChatClient
 
 end
 
-if ARGV.length != 1
+if ARGV.length < 1 or ARGV.length > 2 or (ARGV.length == 2 and ARGV[1] != "--no-flood")
 
-    puts "Utilização errada do arquivo, execute da seguinte maneira: ruby client.rb <nickname>"
+    puts "Utilização errada do arquivo, execute da seguinte maneira: ruby client.rb <nickname> [--no-flood]"
     exit(0)
 
 end
 
 nickname = ARGV[0]
+noFlood = ARGV.length == 2 ? true : false
 
 begin
     
-    client = ChatClient.new('sdi_lucas', nickname)
+    client = ChatClient.new('sdi_lucas', nickname, noFlood)
 
     client.requestNicknameAuthorization
     
