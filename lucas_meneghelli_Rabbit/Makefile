@@ -3,20 +3,20 @@
 # basic:
 # 	- javac src/Message.java src/FileManager.java src/Chat.java src/Server.java src/Client.java -d .
 
-# localtest:
-# 	- mkdir localtest
-# 	- mkdir localtest/server
-# 	- javac src/Message.java src/FileManager.java src/Chat.java src/Server.java -d localtest/server
-# 	- mkdir localtest/lucas
-# 	- javac src/Message.java src/FileManager.java src/Chat.java src/Client.java -d localtest/lucas
-# 	- base64 /dev/urandom | head -c 1M > localtest/lucas/lucas-01.chat
-# 	- base64 /dev/urandom | head -c 1M > localtest/lucas/lucas-02.chat
-# 	- mkdir localtest/pedro
-# 	- javac src/Message.java src/FileManager.java src/Chat.java src/Client.java -d localtest/pedro
-# 	- base64 /dev/urandom | head -c 1M > localtest/pedro/pedro-01.chat
-# 	- mkdir localtest/joao
-# 	- javac src/Message.java src/FileManager.java src/Chat.java src/Client.java -d localtest/joao
-# 	- base64 /dev/urandom | head -c 1M > localtest/joao/joao-01.chat
+localtest:
+	- mkdir localtest
+	- mkdir localtest/server
+	- cp src/server.rb localtest/server
+	- mkdir localtest/lucas
+	- cp src/client.rb localtest/lucas
+	- base64 /dev/urandom | head -c 1M > localtest/lucas/lucas-01.chat
+	- base64 /dev/urandom | head -c 1M > localtest/lucas/lucas-02.chat
+	- mkdir localtest/pedro
+	- cp src/client.rb localtest/pedro
+	- base64 /dev/urandom | head -c 1M > localtest/pedro/pedro-01.chat
+	- mkdir localtest/joao
+	- cp src/client.rb localtest/joao
+	- base64 /dev/urandom | head -c 1M > localtest/joao/joao-01.chat
 
 # lucas_meneghelli:
 # 	- mkdir lucas_meneghelli
@@ -33,6 +33,7 @@
 .PHONY: clean
 
 clean:
-	-rm *.chat
-	-rm *.serv
-	-rm *.client*
+	-rm src/*.chat
+	-rm src/*.serv
+	-rm src/*.client*
+	-rm localtest -r

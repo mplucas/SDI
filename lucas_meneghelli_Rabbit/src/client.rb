@@ -89,32 +89,40 @@ class ChatClient
 
     def sendMessage
     
-        fileName = nickname + '-' + (sendID + 1).to_s.rjust(2, '0') + '.chat'
-        puts " [x] Verificando se o arquivo '#{fileName}' existe para o enviar como mensagem ao server"
+        hasMessagesToSend = true
 
-        if File.exists?(fileName)
+        while hasMessagesToSend
+        
+            fileName = nickname + '-' + (sendID + 1).to_s.rjust(2, '0') + '.chat'
+            puts " [x] Verificando se o arquivo '#{fileName}' existe para o enviar como mensagem ao server"
 
-            file = File.open(fileName)
-            file_data = file.read
-            file.close
-            
-            message = {:type => 'message', :nickname => nickname, :content => file_data}
-            puts " [x] Enviada mensagem #{message} para o Server"
-            result = send(message)
+            if File.exists?(fileName)
 
-            if result == 'OK'
+                file = File.open(fileName)
+                file_data = file.read
+                file.close
                 
-                @sendID = sendID + 1
+                message = {:type => 'message', :nickname => nickname, :content => file_data}
+                puts " [x] Enviada mensagem #{message} para o Server"
+                result = send(message)
+
+                if result == 'OK'
+                    
+                    @sendID = sendID + 1
+
+                else
+
+                    puts " [x] Recebida resposta errada #{result} do server após envio, tentará enviar novamente a mensagem na próxima checagem"
+                    hasMessagesToSend = false
+
+                end
 
             else
 
-                puts " [x] Recebida resposta errada #{result} do server após envio, tentará enviar novamente a mensagem na próxima checagem"
+                puts "Arquivo #{fileName} não existe, não enviando mensagens ao server"
+                hasMessagesToSend = false
 
             end
-
-        elsif
-
-            puts "Arquivo #{fileName} não existe, não enviando mensagens ao server"
 
         end
 
