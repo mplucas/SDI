@@ -1,8 +1,3 @@
-# all: basic
-
-# basic:
-# 	- javac src/Message.java src/FileManager.java src/Chat.java src/Server.java src/Client.java -d .
-
 localtest:
 	- mkdir localtest
 	- mkdir localtest/server
@@ -37,3 +32,4 @@ clean:
 	-rm src/*.serv
 	-rm src/*.client*
 	-rm localtest -r
+	-rm lucas_meneghelli -r

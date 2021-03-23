@@ -1,6 +1,82 @@
-http://www.rabbitmq.com/getstarted.html
-sudo rabbitmqctl list_queues
-ruby send.rb
-ruby recv.rb
+######## Instalação Ruby ########
+Para executar localmente, é necessário instalar o Ruby:
+- No linux:
+sudo apt-get install ruby
+gem install bunny --version ">= 2.6.4"
+sudo gem install bunny --version ">= 2.6.4"
 
-base64 /dev/urandom | head -c 1K > lucas-01.chat
+######## Listar Queues ativas ########
+sudo rabbitmqctl list_queues
+
+######## Para limpar arquivos ########
+na past raiz (lucas_meneghelli_Rabbit):
+> make clean
+
+######## COMO EXECUTAR O CLIENT E O SERVER ########
+- Para executar o server é necessário utilizar o comando a seguir
+> ruby server.rb <host> [--no-flood]
+    * Onde <host> é o host em que o server se encontra.
+    - No caso da atividade, como o professor mudou as especificações do trabalho para que a implementação fosse funcional em apenas uma máquina, o host será
+    localhost em todos os testes.
+    - --no-flood é uma flag opcional para que não sejam printadas os conteudos das mensagens recebidas no server
+
+- Para executar o client é necessário o comando a seguir
+> ruby client.rb <nickname> <host> [--no-flood]
+    * Onde <host> é o host do server para o client se conectar e <nickname> seu nickname.
+    - No caso da atividade, como o professor mudou as especificações do trabalho para que a implementação fosse funcional em apenas uma máquina, o host será
+    localhost em todos os testes.
+    - --no-flood é uma flag opcional para que não sejam printadas os conteudos das mensagens enviadas ao server
+
+######## OBSERVAÇÕES ########
+- segundo o professor, é obrigatório o print da mensagem recebidas no cliente. Por isso, as mensagens utilizadas (de 1M) podem floodar a tela. No entanto, apenas
+foi seguido a metodologia do trabalho pedida pelo professor. Caso se deseje verificar melhor a solução sem o flood, utilizar a flag opcional --no-flood ao
+executar o client e o server
+
+
+
+TESTES ABAIXO:
+
+######## Teste do professor (Moodle) ########
+* OBS: como o professor mudou as especificações do trabalho para que a implementação fosse funcional em apenas uma máquina, o host será
+localhost em todos os testes.
+
+na pasta raiz (lucas_meneghelli_Rabbit):
+> make clean; make lucas_meneghelli;
+
+enviar a pasta lucas_meneghelli para a maquina:
+> scp -r lucas_meneghelli ens1:/home/alu2020s2/
+* OBS: seria interessante enviar para algum outro diretório para que não ocorra o caso de outra pessoa estar realizando o mesmo teste.
+    Porque no caso, estariam mexendo na mesma pasta. Caso seja movido para uma nova pasta, adaptar comandos abaixo.
+
+agora acessando por ssh as maquinas:
+na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli/server
+> ruby server.rb localhost
+
+em outro terminal, na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli/paul
+> ruby client.rb paul localhost
+
+em outro terminal, na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli/john
+> ruby client.rb john localhost
+
+em outro terminal, na maquina ens1, acessar /home/alu2020s2/lucas_meneghelli/mary
+> ruby client.rb mary localhost
+* OBS: como o professor mudou as especificações do trabalho para que a implementação fosse funcional em apenas uma máquina, se utiliza
+ens1 ao invés de ens2 para mary.
+
+
+######## Teste local ########
+
+na pasta raiz (lucas_meneghelli_Rabbit):
+> make clean; make localtest;
+
+na pasta localtest/server
+> ruby server.rb localhost
+
+em outro terminal, na pasta localtest/lucas
+> ruby client.rb lucas localhost
+
+em outro terminal, na pasta localtest/pedro
+> ruby client.rb pedro localhost
+
+em outro terminal, na pasta localtest/joao
+> ruby client.rb joao localhost
