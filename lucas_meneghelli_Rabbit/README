@@ -1,3 +1,8 @@
+######## OBSERVAÇÕES IMPORTANTES ########
+O trabalho foi desenvolvido de acordo com as adptações informadas pelo professor ao decorrer do desenvolvimento do trabalho e feedback dos alunos. Logo temose que:
+    - As linguagens de programação (Java, Python ou Ruby) utilizadas para desenvolver o trabalho podem ser apenas uma, no caso deste trabalho é Ruby.
+    - O teste final não requer o funcionamento em mais de uma máquina, pode ser feito apenas os testes localmente. Por isso se adota nos testes o host localhost.
+
 ######## Instalação Ruby ########
 Para executar localmente, é necessário instalar o Ruby:
 - No linux:
